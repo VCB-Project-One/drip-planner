@@ -1,0 +1,36 @@
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh
+}
+
+header {
+    align-items: center;
+    height: 10%;
+
+    border: solid black 1px;
+    margin: 10px 0 10px 0;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+    height: 80%;
+    justify-content: space-evenly;
+
+    border: solid black 1px;
+}
+
+div {
+    border: solid black 1px;
+}
+
+footer {
+    height: 10%;
+
+    border: solid black 1px;
+}
+
+.container {
+    width: 50%;
+}
