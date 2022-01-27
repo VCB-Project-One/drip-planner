@@ -41,3 +41,8 @@ footer {
     height: 50%;
     border: solid black 1px;
 }
+
+#forecast-container {
+    display: flex;
+    flex-direction: column;
+}
