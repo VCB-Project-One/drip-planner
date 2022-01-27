@@ -46,3 +46,7 @@ footer {
     display: flex;
     flex-direction: column;
 }
+
+.day-container {
+    border: solid black 1px;
+}

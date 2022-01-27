@@ -37,8 +37,12 @@ var getForecast = function() {
                                 for (i=0; i < sevenDay.length; i++) {
                                     // creates objects using forecast data
                                     var tempObject = {
-                                        day: sevenDay[i].name,
-                                        shortForecast: sevenDay[i].shortForecast
+                                        name: sevenDay[i].name,
+                                        shortForecast: sevenDay[i].shortForecast,
+                                        temperature: sevenDay[i].temperature + "\U+00B0" + sevenDay[i].temperatureUnit,
+                                        windSpeed: sevenDay[i].windSpeed,
+                                        detailedForecast: sevenDay[i].detailedForecast,
+                                        isDayTime: sevenDay[i].isDayTime
                                     };
 
                                     // push tempObject to forecastArray
@@ -65,21 +69,30 @@ var getForecast = function() {
 }
 
 var generateForecast = function(array) {
+    // delete existing content
+    var content = document.getElementsByClassName("day-container");
+    while(content.length > 0){
+        content[0].parentNode.removeChild(content[0]);
+    }
+
     // convert array from JSON object to string
     JSON.stringify(array);
+    var forecastEl = null;
 
     for (i=0; i<array.length; i++) {
         console.log("Working array: " + JSON.stringify(array[i]) );
 
         // create container for individual forecast
-        var forecastEl = document.createElement("div");
-        forecastEl.className = "";
-        forecastEl.id = "";
-        forecastContainer.appendChild(forecastEl);
+        if (array[i].isDayTime == true || forecastEl == null) {
+            forecastEl = document.createElement("div");
+            forecastEl.className = "day-container";
+            forecastEl.id = "forecastEl-" + i;
+            forecastContainer.appendChild(forecastEl);
+        }
 
         var dayName = document.createElement("h3");
         dayName.className = "";
-        dayName.textContent = array[i].day;
+        dayName.textContent = array[i].name;
         forecastEl.appendChild(dayName);
 
         var dayDetails = document.createElement("p");
