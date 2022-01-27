@@ -9,15 +9,29 @@
 </head>
 <body>
     <header>
-        <h1>WEATHER APP</h1>
+        <!--title-->
+        <h1 class="main-title">
+            Weather in Your Future Destination
+        </h1>
+        <!-- description -->
+        <p>
+            Need to know the weather or climate for your upcoming travel destination? This site makes it easy! Fill out your travel information in the form down below to see what climate awaits you!
+        </p>
     </header>
-    <section>    <!-- description -->
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus doloremque sed magnam laudantium odio minima magni nisi itaque corrupti? Velit numquam sequi quidem repellat quibusdam vitae expedita dolore cupiditate maiores!
-    </section>
     <main>
         <div class="container"> <!-- input+iframe container -->
-            <div> <!-- input container -->
-
+            <div class="input-form">
+                <h3>Travel Information</h3>
+                <p>Enter the place, city, state, or address OR click the location on the map to find lat long coordinates. Then enter the travel dates to get the forecast.</p>
+                <form>
+                    <label for="Destination">Destination</label>
+                    <input type="text" placeholder="Type A Place Name" id="destination" name="destination" class="form-input" />
+                    <label for="Date">Travel Date Start</label>
+                    <input type="date" id="start-date" placeholder="mm/dd/yyyy" class="form-input" />
+                    <label for="Date">Travel Date End</label>
+                    <input type="date" id="end-date" placeholder="mm/dd/yyyy" class="form-input" />
+                    <button type="submit">Find</button>
+                </form>
             </div>
             <div class="iframe-container"> <!-- iframe container -->
             </div>
@@ -31,5 +45,7 @@
         footer text here
     </footer>
     <script src="./assets/script.js"></script>
+    </div>
+    
 </body>
 </html>
