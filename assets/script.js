@@ -76,7 +76,8 @@ var getForecast = function(lat, lon) {
                                         temperature: sevenDay[i].temperature + "°" + sevenDay[i].temperatureUnit,
                                         windSpeed: sevenDay[i].windSpeed,
                                         detailedForecast: sevenDay[i].detailedForecast,
-                                        isDaytime: sevenDay[i].isDaytime
+                                        isDaytime: sevenDay[i].isDaytime,
+                                        icon: sevenDay[i].icon
                                     };
 
                                     // push tempObject to forecastArray
@@ -123,19 +124,31 @@ var generateForecast = function(array) {
 
         var timeContainer = document.createElement("div");
         timeContainer.className = "time-container";
+        timeContainer.style = "display: inline-block"
         dayContainer.appendChild(timeContainer);
+
+        var infoContainer = document.createElement("div");
+        infoContainer.className = "info-container";
+        timeContainer.appendChild(infoContainer);
 
         var dayName = document.createElement("h3");
         dayName.className = "";
         dayName.innerHTML = array[i].name + " (" + array[i].date + ")";
-        timeContainer.appendChild(dayName);
+        infoContainer.appendChild(dayName);
 
         var dayDetails = document.createElement("p");
         dayDetails.className = "";
         dayDetails.innerHTML = "Skies: " + array[i].shortForecast + 
             "</br>Temperature: " + array[i].temperature +
             "</br>Wind Speed: " + array[i].windSpeed;
-        timeContainer.appendChild(dayDetails);
+        infoContainer.appendChild(dayDetails);
+
+        var weatherIcon = document.createElement("img");
+        weatherIcon.className = "icon";
+        weatherIcon.src = array[i].icon;
+        timeContainer.appendChild(weatherIcon);
+
+
     }
 }
 
