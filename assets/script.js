@@ -1,12 +1,41 @@
 var forecastContainer = document.querySelector("#forecast-container");
+var locationInputEl = document.querySelector("#destination-form");
+var CityInputEl = document.querySelector("#destination");
 
-// gets denver city center
-var lat = 39.736762;
-var lon = -104.963855;
+// lat/lon variables
+var lat = "";
+var lon = "";
 
+// function to get the city name from input
+var getLocation = function(event) {
+    event.preventDefault();
+    var city = CityInputEl.value.trim();
+    getCoords(city);
+}
+
+// function to get city lat/lon
+var getCoords = function(city) {
+
+    var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=9f22897565b785c5e1809cff5dde2ef9";
+
+    fetch(apiUrl)
+        .then(function(response) {
+            if (response.ok) {
+                response.json().then(function(data) {
+                    var lat = (data[0].lat);
+                    var lon = (data[0].lon);
+                    console.log(lat);
+                    console.log(lon);
+                    getForecast(lat, lon);
+                });
+            } else {
+                console.log("Error connecting to openweather.com");
+            }
+    });
+};
 
 // function to get forecast for given lat/lon
-var getForecast = function() {
+var getForecast = function(lat, lon) {
 
     // set api URL
     var apiUrl = "https://api.weather.gov/points/" + lat + "," + lon;
@@ -116,4 +145,5 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 
 /////////////////// CALL FUNCTIONS //////////////////
-getForecast();
+// getForecast();
+locationInputEl.addEventListener("submit", getLocation);
