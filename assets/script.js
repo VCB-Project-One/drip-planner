@@ -3,8 +3,8 @@ var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
 
 // lat/lon variables
-var lat = "";
-var lon = "";
+var lat = null;
+var lon = null;
 
 // function to get the city name from input
 var getLocation = function(event) {
@@ -48,14 +48,13 @@ var getForecast = function(lat, lon) {
 
                 response.json().then(function(data) {
                     // log data object
-                    console.log(data)
-                    console.log("Retrieving forcast for " + data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state + "...");
+                    console.log("Retrieving forecast for " + data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state + "...");
+                    console.log("Forecast link: " + data.properties.forecast);
 
-                    // get forecast link 
+                    // fetch forecast link 
                     fetch(data.properties.forecast)
                         .then(function(response) {
                             console.log("Forecast retrieved!")
-                            console.log(data);
 
                             // get seven-day forecast
                             response.json().then(function(data) {
@@ -64,14 +63,20 @@ var getForecast = function(lat, lon) {
 
                                 // log each array index
                                 for (i=0; i < sevenDay.length; i++) {
+
+                                    //convert date to MM/dd
+                                    let date = sevenDay[i].startTime;
+                                    var formattedDate = date.substring(5, 10);
+
                                     // creates objects using forecast data
                                     var tempObject = {
                                         name: sevenDay[i].name,
+                                        date: formattedDate,
                                         shortForecast: sevenDay[i].shortForecast,
-                                        temperature: sevenDay[i].temperature + "\U+00B0" + sevenDay[i].temperatureUnit,
+                                        temperature: sevenDay[i].temperature + "°" + sevenDay[i].temperatureUnit,
                                         windSpeed: sevenDay[i].windSpeed,
                                         detailedForecast: sevenDay[i].detailedForecast,
-                                        isDayTime: sevenDay[i].isDayTime
+                                        isDaytime: sevenDay[i].isDaytime
                                     };
 
                                     // push tempObject to forecastArray
@@ -106,28 +111,31 @@ var generateForecast = function(array) {
 
     // convert array from JSON object to string
     JSON.stringify(array);
-    var forecastEl = null;
+    // var dayContainer = null;
 
     for (i=0; i<array.length; i++) {
-        console.log("Working array: " + JSON.stringify(array[i]) );
-
         // create container for individual forecast
-        if (array[i].isDayTime == true || forecastEl == null) {
-            forecastEl = document.createElement("div");
-            forecastEl.className = "day-container";
-            forecastEl.id = "forecastEl-" + i;
-            forecastContainer.appendChild(forecastEl);
+        if (array[i].isDaytime == true || dayContainer == null) {
+            var dayContainer = document.createElement("div");
+            dayContainer.className = "day-container";
+            forecastContainer.appendChild(dayContainer);
         }
+
+        var timeContainer = document.createElement("div");
+        timeContainer.className = "time-container";
+        dayContainer.appendChild(timeContainer);
 
         var dayName = document.createElement("h3");
         dayName.className = "";
-        dayName.textContent = array[i].name;
-        forecastEl.appendChild(dayName);
+        dayName.innerHTML = array[i].name + " (" + array[i].date + ")";
+        timeContainer.appendChild(dayName);
 
         var dayDetails = document.createElement("p");
         dayDetails.className = "";
-        dayDetails.textContent = array[i].shortForecast;
-        forecastEl.appendChild(dayDetails);
+        dayDetails.innerHTML = "Skies: " + array[i].shortForecast + 
+            "</br>Temperature: " + array[i].temperature +
+            "</br>Wind Speed: " + array[i].windSpeed;
+        timeContainer.appendChild(dayDetails);
     }
 }
 
@@ -145,5 +153,5 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 
 /////////////////// CALL FUNCTIONS //////////////////
-// getForecast();
+
 locationInputEl.addEventListener("submit", getLocation);

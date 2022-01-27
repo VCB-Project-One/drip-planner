@@ -1,7 +1,7 @@
 body {
     display: flex;
     flex-direction: column;
-    height: 100vh
+    height: 100vh;
 }
 
 header {
@@ -15,7 +15,8 @@ header {
 main {
     display: flex;
     flex-direction: row;
-    height: 80%;
+    min-height: 80%;
+    height: min-content;
     justify-content: space-evenly;
 
     border: solid black 1px;
@@ -37,16 +38,34 @@ footer {
     align-items: center;
 }
 
+.input-form {
+    height: 30%;
+
+    border: solid black 1px;
+}
+
 .iframe-container {
-    height: 50%;
+    height: 70%;
     border: solid black 1px;
 }
 
 #forecast-container {
     display: flex;
     flex-direction: column;
+    overflow: auto;
 }
 
 .day-container {
     border: solid black 1px;
+    width: 100%;
+    
+
+    display: flex;
+    flex-direction: row;
+}
+
+.time-container {
+    width: 49%;
+    margin-left: auto;
+    margin-right: auto;
 }
