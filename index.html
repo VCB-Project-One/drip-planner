@@ -4,22 +4,39 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
     <link rel="stylesheet" href="./assets/style.css" />
     <title>Document</title>
 </head>
 <body>
     <header>
-        <h1>WEATHER APP</h1>
+        <!--title-->
+        <h1 class="main-title">
+            Weather in Your Future Destination
+        </h1>
+        <!-- description -->
+        <p>
+            Need to know the weather or climate for your upcoming travel destination? This site makes it easy! Fill out your travel information in the form down below to see what climate awaits you!
+        </p>
     </header>
-    <section>    <!-- description -->
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus doloremque sed magnam laudantium odio minima magni nisi itaque corrupti? Velit numquam sequi quidem repellat quibusdam vitae expedita dolore cupiditate maiores!
-    </section>
     <main>
         <div class="container"> <!-- input+iframe container -->
-            <div> <!-- input container -->
-
+            <div class="input-form">
+                <h3>Travel Information</h3>
+                <p>Enter the place, city, state, or address OR click the location on the map to find lat long coordinates. Then enter the travel dates to get the forecast.</p>
+                <form>
+                    <label for="Destination">Destination</label>
+                    <input type="text" placeholder="Type A Place Name" id="destination" name="destination" class="form-input" />
+                    <label for="Date">Travel Date Start</label>
+                    <input type="date" id="start-date" placeholder="mm/dd/yyyy" class="form-input" />
+                    <label for="Date">Travel Date End</label>
+                    <input type="date" id="end-date" placeholder="mm/dd/yyyy" class="form-input" />
+                    <button type="submit">Find</button>
+                </form>
             </div>
-            <div class="iframe-container"> <!-- iframe container -->
+            <div id="map" class="iframe-container"> <!-- iframe container -->
             </div>
         </div>
         <div class="container" id="forecast-container"> <!-- forecast container -->
@@ -30,6 +47,12 @@
         <!-- github links, yada yada -->
         footer text here
     </footer>
+    
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
     <script src="./assets/script.js"></script>
+    </div>
+    
 </body>
 </html>
