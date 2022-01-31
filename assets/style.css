@@ -1,15 +1,33 @@
 body {
     display: flex;
     flex-direction: column;
-    height: 100vh
+    height: 100vh;
+    background-image: linear-gradient(to right, rgb(208, 230, 255), rgb(197, 193, 255));
 }
 
-header {
-    align-items: center;
-    height: 10%;
+.hero {
+    background-image: url(../assets/images/weather-header.jpeg);
+    height: 300px;
+    width: 100%;
+    background-position: center;
+    position: relative;
+}
 
-    border: solid black 1px;
-    margin: 10px 0 10px 0;
+.hero h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font: 40px georgia;
+    padding: 10px 10px;
+}
+
+.hero p {
+    position: absolute;
+    bottom: 8px;
+    left: 50px;
+    margin-left: 320px;
+    padding: 5px 10px;
 }
 
 main {
@@ -17,12 +35,6 @@ main {
     flex-direction: row;
     height: 80%;
     justify-content: space-evenly;
-
-    border: solid black 1px;
-}
-
-div {
-    border: solid black 1px;
 }
 
 footer {
