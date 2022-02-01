@@ -39,6 +39,7 @@ var getCoords = function(city) {
 // function to get forecast for given lat/lon
 var getForecast = function(lat, lon) {
 
+    forecastContainer.textContent = "";
     // set api URL
     var apiUrl = "https://api.weather.gov/points/" + lat + "," + lon;
 
@@ -96,6 +97,7 @@ var getForecast = function(lat, lon) {
 }
 
 var generateForecast = function(array) {
+    
     // convert array from JSON object to string
     JSON.stringify(array);
 
@@ -137,8 +139,11 @@ var getMap = function(lat, lon) {
         var mapLat = (e.latlng.lat);
         var mapLon = (e.latlng.lng);
         getForecast(mapLat, mapLon);
+        var marker = L.marker([mapLat, mapLon]).addTo(map);
     }
 
+
+    
     map.on("click", mapClick);
 };
 
