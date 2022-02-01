@@ -5,11 +5,7 @@ var forecastLocation = null;
 var modalOverlay = document.querySelector("#modal-overlay");
 var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
-<<<<<<< HEAD
 var mapContainerEl = document.querySelector("#map");
-=======
-var MapDivEl = document.querySelector("#map");
->>>>>>> a2d3b0e9e4fd07569f4f06b8b542c00ba63e6f42
 
 // lat/lon variables
 var lat = null;
@@ -129,12 +125,12 @@ var generateForecast = function(array) {
     modalOverlay.style.visibility = "visible";
     
     // make map iframe invisible (???)
-    MapDivEl.style.visibility = "hidden";
+    mapContainerEl.style.visibility = "hidden";
 
     // close button functionality
     $("#forecast-close-btn").on("click", function() {
         modalOverlay.style.visibility = "hidden";
-        MapDivEl.style.visibility = "visible";
+        mapContainerEl.style.visibility = "visible";
     });
 
     // set forecast header to relativeLocation
@@ -211,7 +207,6 @@ var generateForecast = function(array) {
 }
 
 var getMap = function(lat, lon) {
-<<<<<<< HEAD
 
     var map = L.map('map').setView([lat, lon], 13);
 
@@ -223,29 +218,6 @@ var getMap = function(lat, lon) {
         zoomOffset: -1,
         accessToken: 'pk.eyJ1Ijoid2luZ3JhbTEiLCJhIjoiY2t5dzl6Z2t1MDYyNjJucXBiNHdvcTd5diJ9.GqWwwJ4INQXw49NCNZuEQQ'
     }).addTo(map);
-=======
-    MapDivEl.innerHTML = "";
-
-    var map = L.map('map').setView([lat, lon], 13);
-
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/streets-v11',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'pk.eyJ1Ijoid2luZ3JhbTEiLCJhIjoiY2t5dzl6Z2t1MDYyNjJucXBiNHdvcTd5diJ9.GqWwwJ4INQXw49NCNZuEQQ'
-    }).addTo(map);
-    function mapClick(e) {
-        var mapLat = (e.latlng.lat);
-        var mapLon = (e.latlng.lng);
-        getForecast(mapLat, mapLon);
-    }
-
-    map.on("click", mapClick);
-};
-
->>>>>>> a2d3b0e9e4fd07569f4f06b8b542c00ba63e6f42
 
     map.on("click", mapClick);
     
@@ -261,7 +233,3 @@ var clearMap = function() {
 /////////////////// CALL FUNCTIONS //////////////////
 // getForecast();
 locationInputEl.addEventListener("submit", getLocation);
-<<<<<<< HEAD
-=======
-
->>>>>>> a2d3b0e9e4fd07569f4f06b8b542c00ba63e6f42
