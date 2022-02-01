@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
    crossorigin=""/>
@@ -12,45 +14,80 @@
 </head>
 <body>
     <header>
+        <section class="hero">
         <!--title-->
-        <h1 class="main-title">
-            Weather in Your Future Destination
-        </h1>
-        <!-- description -->
-        <p>
-            Need to know the weather or climate for your upcoming travel destination? This site makes it easy! Fill out your travel information in the form down below to see what climate awaits you!
-        </p>
+            <h1 class="main-title text-center fw-bold text-black bg-white border rounded">
+                Weather in Your Future Destination
+            </h1>
+            <!-- description -->
+            <p class="text-center text-wrap text-white bg-dark border-dark rounded">
+                Need to know the weather or climate for your upcoming travel destination? This site makes it easy! <br> Fill out your travel information in the form down below to see what climate awaits you!
+            </p>
+        </section>
     </header>
     <main>
-        <div class="container"> <!-- input+iframe container -->
-            <div class="input-form">
-                <h3>Travel Information</h3>
-                <p>Enter the place, city, state, or address OR click the location on the map to find lat long coordinates. Then enter the travel dates to get the forecast.</p>
+        <div class="container-lg bg-white border border-dark rounded m-3"> <!-- input+iframe container -->
+            <div class="input-form m-2">
+                <h3 class="text-center">Travel Information</h3>
+                <p class="text-center">Enter the place, city, state, or address along with your travel dates to get the forecast.</p>
                 <form id="destination-form">
-                    <label for="Destination">Destination</label>
-                    <input type="text" placeholder="Type A Place Name" id="destination" name="destination" class="form-input" />
-                    <label for="Date">Travel Date Start</label>
-                    <input type="date" id="start-date" placeholder="mm/dd/yyyy" class="form-input" />
-                    <label for="Date">Travel Date End</label>
-                    <input type="date" id="end-date" placeholder="mm/dd/yyyy" class="form-input" />
-                    <button type="submit">Find</button>
+                    <div class="mb-3 d-flex flex-column">
+                        <label for="Destination" class="fw-bold col-form-label">Destination</label>
+                        <input type="text" placeholder="Type A Place Name" id="destination" name="destination" class="form-input" />
+                    </div>
+                    <div class="mb-3 d-flex flex-column">
+                        <label for="Date" class="fw-bold col-form-label">Travel Date Start</label>
+                        <input type="date" id="start-date" placeholder="mm/dd/yyyy" class="form-input" />
+                    </div>
+                    <div class="mb-3 d-flex flex-column">
+                        <label for="Date" class="fw-bold col-form-label">Travel Date End</label>
+                        <input type="date" id="end-date" placeholder="mm/dd/yyyy" class="form-input" />
+                    </div>
+                    <div class="d-grid gap-2 col-6 mx-auto d-flex flex-column">
+                        <button type="submit" class="btn btn-info pr-5 pl-5 fs-2">Find</button>
+                    </div>
                 </form>
             </div>
-            <div id="map" class="iframe-container"> <!-- iframe container -->
+            <!-- iframe container -->
+            <div id="map" class="iframe-container">
             </div>
         </div>
-        <div class="container" id="forecast-container"> <!-- forecast container -->
-            container
-        </div>
+        <!-- forecast container -->
+        <!-- <div class="container" id="forecast-container"> 
+        </div> -->
     </main>
     <footer>
         <!-- github links, yada yada -->
         footer text here
     </footer>
+
+    <!-- Forecast modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <!-- Forecast container within modal -->
+        <div class="container modal-content" id="forecast-container">
+            <!-- close button -->
+            <button class="close-btn" id="forecast-close-btn">X</button>
+            <header class="text-center" id="forecast-header"></header>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Forecast Modal -->
+    <div class="details-overlay" id="details-overlay">
+        <!-- Forecast container within modal -->
+        <div class="details-content" id="details-content">
+            <!-- close button -->
+            <p class="text-center" id="detailed-forecast"></p>
+            <button class="close-btn" id="details-close-btn">X</button>
+            </div>
+        </div>
+    </div>
     
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="./assets/script.js"></script>
     </div>
     

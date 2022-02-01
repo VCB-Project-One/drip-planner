@@ -1,28 +1,41 @@
 body {
-    display: flex;
-    flex-direction: column;
-    height: 100vh
+    /* display: flex;
+    flex-direction: column; */
+    height: 100vh;
+    background-image: linear-gradient(to right, rgb(208, 230, 255), rgb(197, 193, 255));
 }
 
-header {
-    align-items: center;
-    height: 10%;
+.hero {
+    background-image: url(../assets/images/weather-header.jpeg);
+    height: 300px;
+    width: 100%;
+    background-position: center;
+    position: relative;
+}
 
-    border: solid black 1px;
-    margin: 10px 0 10px 0;
+.hero h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font: 40px georgia;
+    padding: 10px 10px;
+}
+
+.hero p {
+    position: absolute;
+    bottom: 8px;
+    left: 50px;
+    margin-left: 320px;
+    padding: 5px 10px;
 }
 
 main {
     display: flex;
     flex-direction: row;
-    height: 80%;
+    min-height: 80%;
+    height: min-content;
     justify-content: space-evenly;
-
-    border: solid black 1px;
-}
-
-div {
-    border: solid black 1px;
 }
 
 footer {
@@ -31,18 +44,124 @@ footer {
     border: solid black 1px;
 }
 
-.container {
+/* .container {
     width: 50%;
 
     align-items: center;
+}*/
+
+.input-form {
+    height: 30%;
+
+    border: solid black 1px;
 }
 
 .iframe-container {
-    height: 50%;
+    height: 70%;
     border: solid black 1px;
+}
+
+/* Forecast Modal */
+.modal-overlay {
+    visibility: hidden; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 66%; /* Could be more or less, depending on screen size */
+}
+
+.close-btn {
+    background-color: red;
+    color: white;
+    border: 1px black solid;
+    border-radius: 15%;
+    position: absolute;
+    right: 1%;
+    top: 1%;
 }
 
 #forecast-container {
     display: flex;
     flex-direction: column;
+    overflow: auto;
+}
+
+.day-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.time-container {
+    border: solid black 2px;
+    border-radius: 3%;
+    display: flex;
+    flex-direction: row;
+    width: 45%;
+    height: 200px;
+    margin: 0.5% auto 0.5% auto;
+    background-size: contain;
+}
+
+.info-container {
+    flex: auto;
+    width: 100%;
+    height: 100%;
+    padding: 3%;
+    background: linear-gradient(90deg, white, white,rgba(255,255,255,.97), rgba(255,255,255,0.5), rgba(255,255,255,0));
+}
+
+.details-btn {
+    background-color: navy;
+    border-radius: 10%;
+    margin-right: 5px;
+    border: 1px black solid;
+    color: lightblue;
+}
+
+.add-btn {
+    background-color:darkturquoise;
+    border-radius: 10%;
+    color: white;
+    border: black;
+}
+
+.details-overlay {
+    visibility: hidden; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2; /* Sit on... topper? */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.details-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Could be more or less, depending on screen size */
+    justify-content: center;
+}
+
+#details-close-btn {
+    position: relative;
+    margin-left: 50%;
 }
