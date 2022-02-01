@@ -1,11 +1,15 @@
 var forecastContainer = document.querySelector("#forecast-container");
+var forecastArray = [];
+var forecastHeader = document.querySelector("#forecast-header");
+var forecastLocation = null;
+var modalOverlay = document.querySelector("#modal-overlay");
 var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
-var MapDivEl = document.querySelector("#map");
+var mapContainerEl = document.querySelector("#map");
 
 // lat/lon variables
-var lat = "";
-var lon = "";
+var lat = null;
+var lon = null;
 
 // function to get the city name from input
 var getLocation = function(event) {
@@ -27,6 +31,7 @@ var getCoords = function(city) {
                     var lon = (data[0].lon);
                     console.log(lat);
                     console.log(lon);
+                    clearMap();
                     getForecast(lat, lon);
                     getMap(lat, lon);
                 });
@@ -51,26 +56,37 @@ var getForecast = function(lat, lon) {
 
                 response.json().then(function(data) {
                     // log data object
-                    console.log(data)
-                    console.log("Retrieving forcast for " + data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state + "...");
+                    forecastLocation = data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state;
+                    console.log("Retrieving forecast for " + forecastLocation + "...");
+                    console.log("Forecast link: " + data.properties.forecast);
 
-                    // get forecast link 
+                    // fetch forecast link 
                     fetch(data.properties.forecast)
                         .then(function(response) {
                             console.log("Forecast retrieved!")
-                            console.log(data);
 
                             // get seven-day forecast
                             response.json().then(function(data) {
                                 var sevenDay = data.properties.periods;
-                                var forecastArray = [];
+                                forecastArray = [];
 
                                 // log each array index
                                 for (i=0; i < sevenDay.length; i++) {
+
+                                    //convert date to MM/dd
+                                    let date = sevenDay[i].startTime;
+                                    var formattedDate = date.substring(5, 10);
+
                                     // creates objects using forecast data
                                     var tempObject = {
-                                        day: sevenDay[i].name,
-                                        shortForecast: sevenDay[i].shortForecast
+                                        name: sevenDay[i].name,
+                                        date: formattedDate,
+                                        shortForecast: sevenDay[i].shortForecast,
+                                        temperature: sevenDay[i].temperature + "°" + sevenDay[i].temperatureUnit,
+                                        windSpeed: sevenDay[i].windSpeed,
+                                        detailedForecast: sevenDay[i].detailedForecast,
+                                        isDaytime: sevenDay[i].isDaytime,
+                                        icon: sevenDay[i].icon
                                     };
 
                                     // push tempObject to forecastArray
@@ -97,33 +113,101 @@ var getForecast = function(lat, lon) {
 }
 
 var generateForecast = function(array) {
+    // delete existing content
+    var content = document.getElementsByClassName("day-container");
+    while(content.length > 0){
+        content[0].parentNode.removeChild(content[0]);
+    }
+
+    
+    //TODO: make forecast appear in a modal
+
+    // make modal invisible
+    modalOverlay.style.visibility = "visible";
+    
+    // make map iframe invisible (???)
+    mapContainerEl.style.visibility = "hidden";
+
+    // close button functionality
+    $("#forecast-close-btn").on("click", function() {
+        modalOverlay.style.visibility = "hidden";
+        mapContainerEl.style.visibility = "visible";
+    });
+
+    // set forecast header to relativeLocation
+    console.log("forecastLocation: " + forecastLocation);
+    document.querySelector("#forecast-header").textContent = "Showing forecast for: " + forecastLocation;
     
     // convert array from JSON object to string
     JSON.stringify(array);
+    // var dayContainer = null;
 
     for (i=0; i<array.length; i++) {
-        console.log("Working array: " + JSON.stringify(array[i]) );
-
         // create container for individual forecast
-        var forecastEl = document.createElement("div");
-        forecastEl.className = "";
-        forecastEl.id = "";
-        forecastContainer.appendChild(forecastEl);
+        if (array[i].isDaytime == true || dayContainer == null) {
+            var dayContainer = document.createElement("div");
+            dayContainer.className = "day-container";
+            forecastContainer.appendChild(dayContainer);
+        }
+
+        var timeContainer = document.createElement("div");
+        timeContainer.className = "time-container";
+        timeContainer.style = "display: inline-block; background-image: url(" + array[i].icon + ");";
+        dayContainer.appendChild(timeContainer);
+
+        var infoContainer = document.createElement("div");
+        infoContainer.className = "info-container";
+        timeContainer.appendChild(infoContainer);
 
         var dayName = document.createElement("h3");
         dayName.className = "";
-        dayName.textContent = array[i].day;
-        forecastEl.appendChild(dayName);
+        dayName.innerHTML = array[i].name + " (" + array[i].date + ")";
+        infoContainer.appendChild(dayName);
 
         var dayDetails = document.createElement("p");
         dayDetails.className = "";
-        dayDetails.textContent = array[i].shortForecast;
-        forecastEl.appendChild(dayDetails);
+        dayDetails.innerHTML = "Skies: " + array[i].shortForecast + 
+            "</br>Temperature: " + array[i].temperature +
+            "</br>Wind Speed: " + array[i].windSpeed;
+        infoContainer.appendChild(dayDetails);
+
+        var detailsBtn = document.createElement("button");
+        detailsBtn.className = "details-btn";
+        detailsBtn.dataset.forecastIndex = i;
+        detailsBtn.textContent = "More Details";
+        infoContainer.appendChild(detailsBtn);
+
+        var addBtn = document.createElement("button");
+        addBtn.className = "add-btn";
+        addBtn.dataset.forecastIndex = i;
+        addBtn.textContent = "Add to Trip";
+        infoContainer.appendChild(addBtn);   
+
     }
+
+    $(".details-btn").on("click", function() {
+        let modalText = forecastArray[$(this).data("forecastIndex")].detailedForecast;
+        var detailsText = document.querySelector("#detailed-forecast");
+
+        //make details modal visible
+        $("#details-overlay").css("visibility", "visible");
+
+        //modal close button
+        $("#details-close-btn").on("click", function(){
+            $("#details-overlay").css("visibility", "hidden");
+        });
+
+        //set text to detailed forecast
+        detailsText.textContent = JSON.stringify(modalText);
+    })
+
+    $(".add-btn").on("click", function() {
+        console.log("add button with data-forecastIndex of [" + $(this).data("forecastIndex") + "] has been clicked");
+    })
+
 }
 
 var getMap = function(lat, lon) {
-    MapDivEl.innerHTML = "";
 
     var map = L.map('map').setView([lat, lon], 13);
 
@@ -145,11 +229,16 @@ var getMap = function(lat, lon) {
 
     
     map.on("click", mapClick);
+    
 };
 
+var mapClick = function(e) {
+    console.log("You clicked on map at " + e.latlng);
+}
 
-
+var clearMap = function() {
+    mapContainerEl.innerHTML = "";
+}
 /////////////////// CALL FUNCTIONS //////////////////
 // getForecast();
 locationInputEl.addEventListener("submit", getLocation);
-
