@@ -134,7 +134,9 @@ var getMap = function(lat, lon) {
         accessToken: 'pk.eyJ1Ijoid2luZ3JhbTEiLCJhIjoiY2t5dzl6Z2t1MDYyNjJucXBiNHdvcTd5diJ9.GqWwwJ4INQXw49NCNZuEQQ'
     }).addTo(map);
     function mapClick(e) {
-        console.log(e.latlng);
+        var mapLat = (e.latlng.lat);
+        var mapLon = (e.latlng.lng);
+        getForecast(mapLat, mapLon);
     }
 
     map.on("click", mapClick);
