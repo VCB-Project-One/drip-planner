@@ -61,12 +61,24 @@
         footer text here
     </footer>
 
-    <!--Creates the modal body-->
+    <!-- Forecast modal -->
     <div class="modal-overlay" id="modal-overlay">
         <!-- Forecast container within modal -->
         <div class="container modal-content" id="forecast-container">
             <!-- close button -->
-            <button class="close-btn">X</button>
+            <button class="close-btn" id="forecast-close-btn">X</button>
+            <header class="text-center" id="forecast-header"></header>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Forecast Modal -->
+    <div class="details-overlay" id="details-overlay">
+        <!-- Forecast container within modal -->
+        <div class="details-content" id="details-content">
+            <!-- close button -->
+            <p class="text-center" id="detailed-forecast"></p>
+            <button class="close-btn" id="details-close-btn">X</button>
             </div>
         </div>
     </div>

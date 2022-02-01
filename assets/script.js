@@ -1,4 +1,7 @@
 var forecastContainer = document.querySelector("#forecast-container");
+var forecastArray = [];
+var forecastHeader = document.querySelector("#forecast-header");
+var forecastLocation = null;
 var modalOverlay = document.querySelector("#modal-overlay");
 var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
@@ -51,7 +54,8 @@ var getForecast = function(lat, lon) {
 
                 response.json().then(function(data) {
                     // log data object
-                    console.log("Retrieving forecast for " + data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state + "...");
+                    forecastLocation = data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state;
+                    console.log("Retrieving forecast for " + forecastLocation + "...");
                     console.log("Forecast link: " + data.properties.forecast);
 
                     // fetch forecast link 
@@ -62,7 +66,7 @@ var getForecast = function(lat, lon) {
                             // get seven-day forecast
                             response.json().then(function(data) {
                                 var sevenDay = data.properties.periods;
-                                var forecastArray = [];
+                                forecastArray = [];
 
                                 // log each array index
                                 for (i=0; i < sevenDay.length; i++) {
@@ -116,16 +120,21 @@ var generateForecast = function(array) {
     
     //TODO: make forecast appear in a modal
 
-    //make modal invisible
+    // make modal invisible
     modalOverlay.style.visibility = "visible";
     
-    //make map iframe invisible (???)
+    // make map iframe invisible (???)
     MapDivEl.style.visibility = "hidden";
 
-    $(".close-btn").on("click", function() {
+    // close button functionality
+    $("#forecast-close-btn").on("click", function() {
         modalOverlay.style.visibility = "hidden";
+        MapDivEl.style.visibility = "visible";
     });
-    
+
+    // set forecast header to relativeLocation
+    console.log("forecastLocation: " + forecastLocation);
+    document.querySelector("#forecast-header").textContent = "Showing forecast for: " + forecastLocation;
     
     // convert array from JSON object to string
     JSON.stringify(array);
@@ -160,13 +169,40 @@ var generateForecast = function(array) {
             "</br>Wind Speed: " + array[i].windSpeed;
         infoContainer.appendChild(dayDetails);
 
-        var weatherIcon = document.createElement("img");
-        weatherIcon.className = "icon";
-        weatherIcon.src = array[i].icon;
-        timeContainer.appendChild(weatherIcon);
+        var detailsBtn = document.createElement("button");
+        detailsBtn.className = "details-btn";
+        detailsBtn.dataset.forecastIndex = i;
+        detailsBtn.textContent = "More Details";
+        infoContainer.appendChild(detailsBtn);
 
+        var addBtn = document.createElement("button");
+        addBtn.className = "add-btn";
+        addBtn.dataset.forecastIndex = i;
+        addBtn.textContent = "Add to Trip";
+        infoContainer.appendChild(addBtn);   
 
     }
+
+    $(".details-btn").on("click", function() {
+        let modalText = forecastArray[$(this).data("forecastIndex")].detailedForecast;
+        var detailsText = document.querySelector("#detailed-forecast");
+
+        //make details modal visible
+        $("#details-overlay").css("visibility", "visible");
+
+        //modal close button
+        $("#details-close-btn").on("click", function(){
+            $("#details-overlay").css("visibility", "hidden");
+        });
+
+        //set text to detailed forecast
+        detailsText.textContent = JSON.stringify(modalText);
+    })
+
+    $(".add-btn").on("click", function() {
+        console.log("add button with data-forecastIndex of [" + $(this).data("forecastIndex") + "] has been clicked");
+    })
+
 }
 
 var getMap = function(lat, lon) {
