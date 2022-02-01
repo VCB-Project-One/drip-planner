@@ -25,24 +25,34 @@
         </section>
     </header>
     <main>
-        <div class="container bg-white border border-dark rounded"> <!-- input+iframe container -->
-            <div class="input-form">
-                <h3>Travel Information</h3>
-                <p>Enter the place, city, state, or address OR click the location on the map to find lat long coordinates. Then enter the travel dates to get the forecast.</p>
+        <div class="container-lg bg-white border border-dark rounded m-3"> <!-- input+iframe container -->
+            <div class="input-form m-2">
+                <h3 class="text-center">Travel Information</h3>
+                <p class="text-center">Enter the place, city, state, or address along with your travel dates to get the forecast.</p>
                 <form id="destination-form">
-                    <label for="Destination">Destination</label>
-                    <input type="text" placeholder="Type A Place Name" id="destination" name="destination" class="form-input" />
-                    <label for="Date">Travel Date Start</label>
-                    <input type="date" id="start-date" placeholder="mm/dd/yyyy" class="form-input" />
-                    <label for="Date">Travel Date End</label>
-                    <input type="date" id="end-date" placeholder="mm/dd/yyyy" class="form-input" />
-                    <button type="submit">Find</button>
+                    <div class="mb-3 d-flex flex-column">
+                        <label for="Destination" class="fw-bold col-form-label">Destination</label>
+                        <input type="text" placeholder="Type A Place Name" id="destination" name="destination" class="form-input" />
+                    </div>
+                    <div class="mb-3 d-flex flex-column">
+                        <label for="Date" class="fw-bold col-form-label">Travel Date Start</label>
+                        <input type="date" id="start-date" placeholder="mm/dd/yyyy" class="form-input" />
+                    </div>
+                    <div class="mb-3 d-flex flex-column">
+                        <label for="Date" class="fw-bold col-form-label">Travel Date End</label>
+                        <input type="date" id="end-date" placeholder="mm/dd/yyyy" class="form-input" />
+                    </div>
+                    <div class="d-grid gap-2 col-6 mx-auto d-flex flex-column">
+                        <button type="submit" class="btn btn-info pr-5 pl-5 fs-2">Find</button>
+                    </div>
                 </form>
             </div>
-            <div id="map" class="iframe-container"> <!-- iframe container -->
+            <!-- iframe container -->
+            <div id="map" class="iframe-container">
             </div>
         </div>
-        <div class="container" id="forecast-container"> <!-- forecast container -->
+        <!-- forecast container -->
+        <div class="container" id="forecast-container"> 
             container
         </div>
     </main>
