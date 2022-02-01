@@ -1,8 +1,13 @@
 var forecastContainer = document.querySelector("#forecast-container");
 var forecastArray = [];
 var forecastHeader = document.querySelector("#forecast-header");
-var forecastLocation = null;
+var forecastLocation = {
+    city: null,
+    state: null
+};
 var modalOverlay = document.querySelector("#modal-overlay");
+var savedTrips = [];
+var tripsContainer = document.querySelector("#trip-container")
 var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
 var MapDivEl = document.querySelector("#map");
@@ -54,8 +59,9 @@ var getForecast = function(lat, lon) {
 
                 response.json().then(function(data) {
                     // log data object
-                    forecastLocation = data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state;
-                    console.log("Retrieving forecast for " + forecastLocation + "...");
+                    forecastLocation.city = data.properties.relativeLocation.properties.city;
+                    forecastLocation.state = data.properties.relativeLocation.properties.state;
+                    console.log("Retrieving forecast for " + forecastLocation.city + ", " + forecastLocation.state + "...");
                     console.log("Forecast link: " + data.properties.forecast);
 
                     // fetch forecast link 
@@ -84,7 +90,8 @@ var getForecast = function(lat, lon) {
                                         windSpeed: sevenDay[i].windSpeed,
                                         detailedForecast: sevenDay[i].detailedForecast,
                                         isDaytime: sevenDay[i].isDaytime,
-                                        icon: sevenDay[i].icon
+                                        icon: sevenDay[i].icon,
+
                                     };
 
                                     // push tempObject to forecastArray
@@ -132,9 +139,8 @@ var generateForecast = function(array) {
         MapDivEl.style.visibility = "visible";
     });
 
-    // set forecast header to relativeLocation
-    console.log("forecastLocation: " + forecastLocation);
-    document.querySelector("#forecast-header").textContent = "Showing forecast for: " + forecastLocation;
+    // set forecast header to relativeLocation city and state
+    document.querySelector("#forecast-header").textContent = "Showing forecast for: " + forecastLocation.city + ", " + forecastLocation.state;
     
     // convert array from JSON object to string
     JSON.stringify(array);
@@ -154,7 +160,7 @@ var generateForecast = function(array) {
         dayContainer.appendChild(timeContainer);
 
         var infoContainer = document.createElement("div");
-        infoContainer.className = "info-container";
+        infoContainer.className = "info-container card";
         timeContainer.appendChild(infoContainer);
 
         var dayName = document.createElement("h3");
@@ -202,7 +208,28 @@ var generateForecast = function(array) {
     $(".add-btn").on("click", function() {
         console.log("add button with data-forecastIndex of [" + $(this).data("forecastIndex") + "] has been clicked");
     })
+}
 
+var saveTrip = function() {
+    console.log("Trip saved")
+}
+
+var loadTrips = function() {
+    //get savedTrips from local storage
+    savedTrips = localStorage.getItem("trips");
+
+    if (savedTrips = [] || savedTrips == null) {
+        console.log("You don't have any saved trips!")
+
+        var noTripsMessage = document.createElement("h4");
+        noTripsMessage.className = "";
+        noTripsMessage.textContent = "You don't have any saved trips!";
+        tripsContainer.appendChild(noTripsMessage);
+    }
+    else {
+        console.log("Saved trips: " + savedTrips)
+
+    }
 }
 
 var getMap = function(lat, lon) {
@@ -231,5 +258,6 @@ var getMap = function(lat, lon) {
 
 /////////////////// CALL FUNCTIONS //////////////////
 // getForecast();
+loadTrips();
 locationInputEl.addEventListener("submit", getLocation);
 
