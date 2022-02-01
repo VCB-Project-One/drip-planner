@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
    crossorigin=""/>
@@ -52,17 +53,29 @@
             </div>
         </div>
         <!-- forecast container -->
-        <div class="container" id="forecast-container"> 
-        </div>
+        <!-- <div class="container" id="forecast-container"> 
+        </div> -->
     </main>
     <footer>
         <!-- github links, yada yada -->
         footer text here
     </footer>
+
+    <!--Creates the modal body-->
+    <div class="modal-overlay" id="modal-overlay">
+        <!-- Forecast container within modal -->
+        <div class="container modal-content" id="forecast-container">
+            <!-- close button -->
+            <button class="close-btn">X</button>
+            </div>
+        </div>
+    </div>
     
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="./assets/script.js"></script>
     </div>
     

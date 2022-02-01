@@ -1,4 +1,5 @@
 var forecastContainer = document.querySelector("#forecast-container");
+var modalOverlay = document.querySelector("#modal-overlay");
 var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
 var MapDivEl = document.querySelector("#map");
@@ -112,6 +113,20 @@ var generateForecast = function(array) {
         content[0].parentNode.removeChild(content[0]);
     }
 
+    
+    //TODO: make forecast appear in a modal
+
+    //make modal invisible
+    modalOverlay.style.visibility = "visible";
+    
+    //make map iframe invisible (???)
+    MapDivEl.style.visibility = "hidden";
+
+    $(".close-btn").on("click", function() {
+        modalOverlay.style.visibility = "hidden";
+    });
+    
+    
     // convert array from JSON object to string
     JSON.stringify(array);
     // var dayContainer = null;
@@ -126,7 +141,7 @@ var generateForecast = function(array) {
 
         var timeContainer = document.createElement("div");
         timeContainer.className = "time-container";
-        timeContainer.style = "display: inline-block"
+        timeContainer.style = "display: inline-block; background-image: url(" + array[i].icon + ");";
         dayContainer.appendChild(timeContainer);
 
         var infoContainer = document.createElement("div");
