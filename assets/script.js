@@ -1,6 +1,7 @@
 var forecastContainer = document.querySelector("#forecast-container");
 var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
+var MapDivEl = document.querySelector("#map");
 
 // lat/lon variables
 var lat = null;
@@ -27,6 +28,7 @@ var getCoords = function(city) {
                     console.log(lat);
                     console.log(lon);
                     getForecast(lat, lon);
+                    getMap(lat, lon);
                 });
             } else {
                 console.log("Error connecting to openweather.com");
@@ -139,19 +141,29 @@ var generateForecast = function(array) {
     }
 }
 
+var getMap = function(lat, lon) {
+    MapDivEl.innerHTML = "";
 
-var map = L.map('map').setView([36.162, -86.781], 13);
+    var map = L.map('map').setView([lat, lon], 13);
 
-L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    tileSize: 512,
-    zoomOffset: -1,
-    accessToken: 'pk.eyJ1Ijoid2luZ3JhbTEiLCJhIjoiY2t5dzl6Z2t1MDYyNjJucXBiNHdvcTd5diJ9.GqWwwJ4INQXw49NCNZuEQQ'
-}).addTo(map);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1Ijoid2luZ3JhbTEiLCJhIjoiY2t5dzl6Z2t1MDYyNjJucXBiNHdvcTd5diJ9.GqWwwJ4INQXw49NCNZuEQQ'
+    }).addTo(map);
+    function mapClick(e) {
+        console.log(e.latlng);
+    }
+
+    map.on("click", mapClick);
+};
+
 
 
 /////////////////// CALL FUNCTIONS //////////////////
-
+// getForecast();
 locationInputEl.addEventListener("submit", getLocation);
+
