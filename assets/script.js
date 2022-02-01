@@ -220,14 +220,6 @@ var getMap = function() {
         zoomOffset: -1,
         accessToken: 'pk.eyJ1Ijoid2luZ3JhbTEiLCJhIjoiY2t5dzl6Z2t1MDYyNjJucXBiNHdvcTd5diJ9.GqWwwJ4INQXw49NCNZuEQQ'
     }).addTo(map);
-    function mapClick(e) {
-        var mapLat = (e.latlng.lat);
-        var mapLon = (e.latlng.lng);
-        getForecast(mapLat, mapLon);
-        var marker = L.marker([mapLat, mapLon]).addTo(map);
-    }
-
-
     
     map.on("click", mapClick);
     
