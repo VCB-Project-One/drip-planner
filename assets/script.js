@@ -237,6 +237,7 @@ var mapClick = function(e) {
     var mapLat = e.latlng.lat;
     var mapLon = e.latlng.lng;
     L.marker([mapLat, mapLon]).addTo(map);
+    
 }
 
 var changeMap = function(lat, lon) {
