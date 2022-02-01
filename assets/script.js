@@ -6,7 +6,7 @@ var modalOverlay = document.querySelector("#modal-overlay");
 var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
 var mapContainerEl = document.querySelector("#map");
-
+var map = null;
 // lat/lon variables
 var lat = null;
 var lon = null;
@@ -31,9 +31,10 @@ var getCoords = function(city) {
                     var lon = (data[0].lon);
                     console.log(lat);
                     console.log(lon);
-                    clearMap();
+                    changeMap(lat, lon);
                     getForecast(lat, lon);
-                    getMap(lat, lon);
+                    
+
                 });
             } else {
                 console.log("Error connecting to openweather.com");
@@ -206,9 +207,9 @@ var generateForecast = function(array) {
 
 }
 
-var getMap = function(lat, lon) {
+var getMap = function() {
 
-    var map = L.map('map').setView([lat, lon], 13);
+    map = L.map('map').setView([36.162663, -86.781601], 13);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -224,12 +225,14 @@ var getMap = function(lat, lon) {
 };
 
 var mapClick = function(e) {
-    console.log("You clicked on map at " + e.latlng);
+    var mapLat = e.latlng.lat;
+    var mapLon = e.latlng.lng;
+    L.marker([mapLat, mapLon]).addTo(map);
 }
 
-var clearMap = function() {
-    mapContainerEl.innerHTML = "";
+var changeMap = function(lat, lon) {
+    map.setView(new L.LatLng(lat, lon), 13);
 }
 /////////////////// CALL FUNCTIONS //////////////////
-// getForecast();
+getMap();
 locationInputEl.addEventListener("submit", getLocation);
