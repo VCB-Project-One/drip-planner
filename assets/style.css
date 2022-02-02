@@ -4,7 +4,7 @@ body {
     height: 100vh;
     background-image: linear-gradient(to right, rgb(208, 230, 255), rgb(197, 193, 255), rgb(136, 128, 255));
 }
-
+/* Header styles*/
 .hero {
     background-image: url(../assets/images/weather-header.jpeg);
     height: 300px;
@@ -35,6 +35,7 @@ main {
     justify-content: space-evenly;
 }
 
+/* input/ iframe styles */
 .left {
     background-color: rgb(85, 106, 197);
     border: 3px solid darkblue;
@@ -45,13 +46,6 @@ main {
     background-color: rgb(238, 241, 247);
 }
 
-footer {
-    height: 10%;
-    background-color: cornflowerblue;
-    font: 30px Georgia;
-    padding-top: 40px;
-}
-
 .input-form {
     height: 30%;
     background-color: rgb(238, 241, 247);
@@ -60,6 +54,19 @@ footer {
 .iframe {
     height: 63%;
     margin: 2rem 1rem;
+}
+
+.no-trips {
+    text-align: center;
+    color: darkblue;
+}
+
+/* footer styles */
+footer {
+    height: 10%;
+    background-color: cornflowerblue;
+    font: 30px Georgia;
+    padding-top: 40px;
 }
 
 /* Forecast Modal */
