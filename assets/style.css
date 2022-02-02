@@ -57,7 +57,8 @@ footer {
 }
 
 .iframe-container {
-    height: 70%;
+    margin-top: 15%;
+    height: 60%;
     border: solid black 1px;
 }
 

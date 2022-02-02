@@ -12,8 +12,8 @@ var currentTrip = null;
 var tripsContainer = document.querySelector("#trip-container")
 var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
-var MapDivEl = document.querySelector("#map");
-
+var mapContainerEl = document.querySelector("#map");
+var map = null;
 // lat/lon variables
 var lat = null;
 var lon = null;
@@ -41,8 +41,10 @@ var getCoords = function(city) {
                     var lon = (data[0].lon);
                     console.log(lat);
                     console.log(lon);
+                    changeMap(lat, lon);
                     getForecast(lat, lon);
-                    getMap(lat, lon);
+                    
+
                 });
             } else {
                 console.log("Error connecting to openweather.com");
@@ -53,6 +55,7 @@ var getCoords = function(city) {
 // function to get forecast for given lat/lon
 var getForecast = function(lat, lon) {
 
+    forecastContainer.textContent = "";
     // set api URL
     var apiUrl = "https://api.weather.gov/points/" + lat + "," + lon;
 
@@ -135,13 +138,13 @@ var generateForecast = function(array) {
     // GENERATE FORECAST MODAL
     modalOverlay.style.visibility = "visible";
     
-    // make map iframe invisible (???) - was causing issues
-    MapDivEl.style.visibility = "hidden";
+    // make map iframe invisible (???)
+    mapContainerEl.style.visibility = "hidden";
 
     // close button functionality
     $("#forecast-close-btn").on("click", function() {
         modalOverlay.style.visibility = "hidden";
-        MapDivEl.style.visibility = "visible";
+        mapContainerEl.style.visibility = "visible";
     });
 
     // set forecast header to relativeLocation city and state
@@ -408,10 +411,9 @@ var loadTrips = function() {
     }
 }
 
-var getMap = function(lat, lon) {
-    MapDivEl.innerHTML = "";
+var getMap = function() {
 
-    var map = L.map('map').setView([lat, lon], 13);
+    map = L.map('map').setView([36.162663, -86.781601], 13);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -421,18 +423,21 @@ var getMap = function(lat, lon) {
         zoomOffset: -1,
         accessToken: 'pk.eyJ1Ijoid2luZ3JhbTEiLCJhIjoiY2t5dzl6Z2t1MDYyNjJucXBiNHdvcTd5diJ9.GqWwwJ4INQXw49NCNZuEQQ'
     }).addTo(map);
-    function mapClick(e) {
-        var mapLat = (e.latlng.lat);
-        var mapLon = (e.latlng.lng);
-        getForecast(mapLat, mapLon);
-    }
-
+    
     map.on("click", mapClick);
+    
 };
 
+var mapClick = function(e) {
+    var mapLat = e.latlng.lat;
+    var mapLon = e.latlng.lng;
+    L.marker([mapLat, mapLon]).addTo(map);
+    
+}
 
-
+var changeMap = function(lat, lon) {
+    map.setView(new L.LatLng(lat, lon), 13);
+}
 /////////////////// CALL FUNCTIONS //////////////////
-// getForecast();
-loadTrips();
+getMap();
 locationInputEl.addEventListener("submit", getLocation);
