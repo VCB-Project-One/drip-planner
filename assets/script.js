@@ -36,7 +36,7 @@ var getLocation = function(event) {
 
 // function to get city lat/lon
 var getCoords = function(city) {
-
+    
     var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=9f22897565b785c5e1809cff5dde2ef9";
 
     fetch(apiUrl)
@@ -269,13 +269,13 @@ var addButtonHandler = function(event) {
 
         //update currentTrip and savedTrips
         currentTrip = newTrip;
-        savedTrips.push(newTrip);
+        savedTrips.push(currentTrip);
 
         // Set to localStorage
         saveTrips();
 
         // TODO: Generate HTML
-        generateTrip(currentTrip.stops);
+        generateTrip();
     } 
     else if (savedTrips.length > 0) {
         // if no trip selected, tell them to select one
@@ -359,20 +359,23 @@ var deleteListItem = function() {
 }
 
 var generateTrip = function(event) {
-    // get data-id of trip
-    let tripsIndex = event.target.parentNode.dataset.id;
 
-    // pick the trip matching the data-id
-    var chosenTrip = savedTrips[tripsIndex]
+    if (currentTrip === null) {
+        // get data-id of trip
+        var tripsIndex = event.target.parentNode.dataset.id;
+
+        // pick the trip matching the data-id
+        currentTrip = savedTrips[tripsIndex]
+    }
 
     //get array of forecast cards to pull from
-    var stops = chosenTrip.stops;
+    var stops = currentTrip.stops;
     
     console.log(stops);
 
 
     // Edit title
-    $("#trip-title").text(chosenTrip.name);
+    $("#trip-title").text(currentTrip.name);
 
     // get rid of lists
     if ($("#list-container")) {
@@ -384,7 +387,7 @@ var generateTrip = function(event) {
         var dayContainer = document.createElement("div");
         dayContainer.className = "day-container col-12";
         dayContainer.innerHTML = "<h6>" + stops[i].name +"</h6>"
-        dayContainer.dataset.date = chosenTrip.date
+        dayContainer.dataset.date = currentTrip.date
         $("#trip-container").append(dayContainer);
 
         var cardContainer = document.createElement("div");
@@ -435,9 +438,6 @@ var generateTrip = function(event) {
     backBtn.addEventListener("click", function() {
         generateList();
     });
-
-    // set currentTrip to chosenTrip
-    currentTrip = chosenTrip;
 
     // See additional details for forecast card
     $(".details-btn").on("click", detailsButtonHandler)
