@@ -212,8 +212,6 @@ var generateForecast = function(array) {
 // - show list of trips, when clicking on one, edit or remove
 // - still add update and reset functions
 
-
-
 var detailsButtonHandler = function(event) {
     console.log("details button clicked");
     console.log(event.target.dataset.details)
@@ -276,7 +274,7 @@ var addButtonHandler = function(event) {
         saveTrips();
 
         // TODO: Generate HTML
-        // generateTrip(currentTrip);
+        generateTrip(currentTrip.stops);
     } 
     else if (savedTrips.length > 0) {
         // if no trip selected, tell them to select one
@@ -312,24 +310,45 @@ var generateList = function() {
         workingListItem.className = "";
         workingListItem.id = "trip-list-item-" + i;
         workingListItem.textContent = savedTrips[i].name;
-        tripsContainer.appendChild(workingListItem);
+        // tripsContainer.appendChild(workingListItem);
 
         //TODO: make container for h4 element
-
+        var savedTripContainer = document.createElement("div");
+        savedTripContainer.appendChild(workingListItem);
         //TODO: make edit & delete buttons
+        var editBtn = document.createElement("button");
+        editBtn.className = "edit-btn";
+        editBtn.textContent = "Edit"
+        savedTripContainer.appendChild(editBtn);
+
+        var deleteBtn =  document.createElement("button");
+        deleteBtn.className = "delete-btn";
+        deleteBtn.textContent = "Delete";
+        savedTripContainer.appendChild(deleteBtn);
+
+        tripsContainer.appendChild(savedTripContainer);
+
+        editBtn.addEventListener("click", generateForecast(savedTrips));
+        deleteBtn.addEventListener("click", deleteListItem);
     }
+}
+
+var deleteListItem = function() {
+    
 }
 
 var generateTrip = function(chosenTrip) {
     //// GENERATE HTML ////
     // Title
-    $("#trip-title").text(chosenTrip.name);
+    console.log(chosenTrip);
+    
+    $("#trip-title").text(chosenTrip[0].name);
 
     // Body
     var dayContainer = document.createElement("div");
     dayContainer.className = "day-container col-12";
-    dayContainer.innerHTML = "<h6>" + newStop.name +"</h6>"
-    dayContainer.dataset.date = newStop.date
+    dayContainer.innerHTML = "<h6>" + chosenTrip[0].name +"</h6>"
+    dayContainer.dataset.date = chosenTrip[0].date
     $("#trip-container").append(dayContainer);
 
     var cardContainer = document.createElement("div");
@@ -342,10 +361,10 @@ var generateTrip = function(chosenTrip) {
 
     var timeContainer = document.createElement("div");
     timeContainer.className = "time-container";
-    timeContainer.dataset.isDayTime = newStop.isDayTime;
-    timeContainer.dataset.relativeDate = newStop.relativeDate;
-    timeContainer.dataset.absoluteDate = newStop.absoluteDate;
-    timeContainer.style = "display: inline-block; background-image: url(" + newStop.icon + ");";
+    timeContainer.dataset.isDayTime = chosenTrip[0].isDayTime;
+    timeContainer.dataset.relativeDate = chosenTrip[0].relativeDate;
+    timeContainer.dataset.absoluteDate = chosenTrip[0].absoluteDate;
+    timeContainer.style = "display: inline-block; background-image: url(" + chosenTrip[0].icon + ");";
     cardRow.appendChild(timeContainer);
 
     var infoContainer = document.createElement("div");
@@ -354,19 +373,19 @@ var generateTrip = function(chosenTrip) {
 
     var dayName = document.createElement("h3");
     dayName.className = "";
-    dayName.innerHTML = newStop.city, newStop.state;
+    dayName.textContent = chosenTrip[0].city, chosenTrip[0].state;
     infoContainer.appendChild(dayName);
 
     var dayDetails = document.createElement("p");
     dayDetails.className = "";
-    dayDetails.innerHTML = "Skies: " + newStop.shortForecast + 
-        "</br>Temperature: " + newStop.temperature +
-        "</br>Wind Speed: " + newStop.windSpeed;
+    dayDetails.innerHTML = "Skies: " + chosenTrip[0].shortForecast + 
+        "</br>Temperature: " + chosenTrip[0].temperature +
+        "</br>Wind Speed: " + chosenTrip[0].windSpeed;
     infoContainer.appendChild(dayDetails);
 
     var detailsBtn = document.createElement("button");
     detailsBtn.className = "details-btn";
-    detailsBtn.dataset.details = newStop.detailedForecast;
+    detailsBtn.dataset.details = chosenTrip[0].detailedForecast;
     detailsBtn.textContent = "More Details";
     infoContainer.appendChild(detailsBtn);
 
@@ -385,6 +404,8 @@ var loadTrips = function() {
 
     if (savedTrips === [] || savedTrips === null) {
         console.log("You don't have any saved trips!")
+
+        savedTrips = [];
 
         var noTripsMessage = document.createElement("h4");
         noTripsMessage.className = "";

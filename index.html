@@ -26,23 +26,23 @@
         </section>
     </header>
     <main>
-        <div class="container-lg bg-white border border-dark rounded m-3"> <!-- input+iframe container -->
+        <div class="container-lg col-md-4 bg-white border border-dark rounded m-3"> <!-- input+iframe container -->
             <div class="input-form m-2">
                 <h3 class="text-center">Travel Information</h3>
-                <p class="text-center">Enter the place, city, state, or address along with your travel dates to get the forecast.</p>
+                <p class="text-center">Enter a City and State to get a forecast</p>
                 <form id="destination-form">
                     <div class="mb-3 d-flex flex-column">
-                        <label for="Destination" class="fw-bold col-form-label">Destination</label>
-                        <input type="text" placeholder="Type A Place Name" id="destination" name="destination" class="form-input" />
+                        <label for="Destination" class="fw-bold col-form-label">City</label>
+                        <input type="text" placeholder="Type A City Name" id="destination" name="destination" class="form-input" />
                     </div>
-                    <div class="mb-3 d-flex flex-column">
+                    <!-- <div class="mb-3 d-flex flex-column">
                         <label for="Date" class="fw-bold col-form-label">Travel Date Start</label>
                         <input type="date" id="start-date" placeholder="mm/dd/yyyy" class="form-input" />
-                    </div>
-                    <div class="mb-3 d-flex flex-column">
+                    </div> -->
+                    <!-- <div class="mb-3 d-flex flex-column">
                         <label for="Date" class="fw-bold col-form-label">Travel Date End</label>
                         <input type="date" id="end-date" placeholder="mm/dd/yyyy" class="form-input" />
-                    </div>
+                    </div> -->
                     <div class="d-grid gap-2 col-6 mx-auto d-flex flex-column">
                         <button type="submit" class="btn btn-info pr-5 pl-5 fs-2">Find</button>
                     </div>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <!-- trip container -->
-        <div class="container-lg bg-white border border-dark rounded m-3">
+        <div class="container-lg col-md-4 bg-white border border-dark rounded m-3">
             <h3 class="text-center" id="trip-title">Saved Trips</h3>
             <div class="container-md bg-white border border-dark rounded m-3" id="trip-container">
                 <!-- Saved trips appended here -->
