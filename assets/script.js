@@ -319,23 +319,31 @@ var generateList = function() {
     }
 
     //generate title
-    var containerTitle = document.createElement("h3");
-    containerTitle.className = "text-center";
-    containerTitle.id = "trip-title";
-    containerTitle.textContent = "Saved Trips"
-    tripsContainer.appendChild(containerTitle);
+    var listTitle = document.createElement("h3");
+    listTitle.className = "text-center";
+    listTitle.id = "trip-title";
+    listTitle.textContent = "Saved Trips";
+    tripsContainer.appendChild(listTitle);
+
+    // generate newTrip button
+    var newTripBtn = document.createElement("btn");
+    newTripBtn.className = "btn btn-primary";
+    newTripBtn.id = "new-trip-btn";
+    newTripBtn.textContent = "New Trip";
+    tripsContainer.appendChild(newTripBtn);
+
+    newTripBtn.addEventListener("click", newTripHandler)
 
     // generate list container
     var listContainer = document.createElement("div");
-    listContainer.className = "container-lg col-md-4 bg-white border border-dark rounded m-3";
+    listContainer.className = "m-3 w-95";
     listContainer.id = "list-container";
-    listContainer.style = "width: 100%";
     tripsContainer.appendChild(listContainer);
 
     // generate list of trips from savedTrips
     for (i=0; i<savedTrips.length; i++) {
         var workingListItem = document.createElement("div");
-        workingListItem.className = "";
+        workingListItem.className = "bg-white border border-dark rounded w-95 m-1";
         workingListItem.id = "trip-list-item-" + i;
         workingListItem.dataset.id = i;
         listContainer.appendChild(workingListItem);
@@ -366,6 +374,25 @@ var generateList = function() {
     }
 }
 
+var newTripHandler = function(event) {
+    console.log("New trip button has been pressed");
+
+    // make empty trip object
+    var newTrip = {
+        name: "Trip " + savedTrips.length,
+        stops: [],
+        index: savedTrips.length
+    }
+
+    // push to savedTrips array
+    savedTrips.push(newTrip);
+
+    currentTrip = newTrip;
+
+    generateTrip();
+
+}
+
 var deleteListItem = function() {
     console.log("Delete trip button clicked")
 }
@@ -373,7 +400,6 @@ var deleteListItem = function() {
 var generateTrip = function(event) {
     // delete everything but trip title
     $("#trip-container").children().remove();
-    // $("#trip-container").children().filter(":not(#trip-title)").remove();
 
     if (currentTrip === null) {
         // get data-id of trip
@@ -461,9 +487,15 @@ var generateTrip = function(event) {
 
     saveBtn.addEventListener("click", function() {
         // Update trip name
-        var newTripTitle = $("#title-edit").val();
-        currentTrip.name = newTripTitle;
+        currentTrip.name = $("#title-edit").val();
 
+        // update savedTrips index
+        savedTrips[currentTrip.index].name = currentTrip.name;
+
+        // save trips
+        saveTrips();
+
+        // go back to list
         generateList();
     });
 
@@ -472,11 +504,6 @@ var generateTrip = function(event) {
 }
 
 var saveTrips = function() {
-    if (currentTrip != null) {
-        var newName = $("#tripNameEdit").val();
-        currentTrip.name = newName;
-    }
-
     localStorage.setItem("Trips", JSON.stringify(savedTrips));
 };
 
@@ -510,47 +537,6 @@ var loadTrips = function() {
         generateList();
     }
 }
-
-// var renameTrip = function(event) {
-//     if (currentTrip != null) {
-//         // set up variables for oldName and textArea
-//         var oldName = $(this).text()
-//         console.log(oldName);
-
-//         var textInput = $("<textarea>")
-//             .addClass("form-control text-center")
-//             .attr("id", "title-edit")
-//             .val(oldName);
-
-//         // replace text with textInput
-//         $(this).replaceWith(textInput);
-//         textInput.trigger("focus");
-
-//         // update and save task
-//         $("#title-edit").on("blur", "textarea", function() {
-
-//             console.log("blur happening");
-
-//             // get the textarea's current value/text
-//             var newText = $(this)
-//                 .val();
-
-//             // recreate h3 element
-//             var titleH3 = $("<h3>")
-//                 .addClass("text-center")
-//                 .attr("id", "trip-title")
-//                 .text(newText);
-            
-//             // replace textarea with <h3>
-//             $(this).replaceWith(titleH3);
-            
-//             // save trips
-//             saveTrips();
-
-//         })
-//     }
-// }
-
 
 var getMap = function(lat, lon) {
     // if map is not initiated, generate map. otherwise set new View and add marker
