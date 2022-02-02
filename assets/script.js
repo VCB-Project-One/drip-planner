@@ -31,22 +31,23 @@ var getLocation = function(event) {
     var city = cityInputEl.value.trim();
     var state = stateInputEl.value.trim();
     console.log(state);
-    getCoords(city);
+    getCoords(city, state);
 }
 
 // function to get city lat/lon
-var getCoords = function(city) {
+var getCoords = function(city, state) {
     
-    var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=9f22897565b785c5e1809cff5dde2ef9";
+    var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "," + state +  ",US&appid=9f22897565b785c5e1809cff5dde2ef9";
 
     fetch(apiUrl)
         .then(function(response) {
             if (response.ok) {
                 response.json().then(function(data) {
+                    console.log(data);
                     var lat = (data[0].lat);
                     var lon = (data[0].lon);
-                    console.log(lat);
-                    console.log(lon);
+                    // console.log(lat);
+                    // console.log(lon);
                     getForecast(lat, lon);
                     getMap(lat, lon);
                 });
