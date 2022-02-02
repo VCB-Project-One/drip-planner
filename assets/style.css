@@ -27,7 +27,7 @@ body {
     background-color: cornflowerblue;
 }
 
-main {
+/*main {
     display: flex;
     flex-direction: row;
     height: 80%;
