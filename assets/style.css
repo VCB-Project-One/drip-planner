@@ -2,9 +2,9 @@ body {
     /* display: flex;
     flex-direction: column; */
     height: 100vh;
-    background-image: linear-gradient(to right, rgb(208, 230, 255), rgb(197, 193, 255));
+    background-image: linear-gradient(to right, rgb(208, 230, 255), rgb(197, 193, 255), rgb(136, 128, 255));
 }
-
+/* Header styles*/
 .hero {
     background-image: url(../assets/images/weather-header.jpeg);
     height: 300px;
@@ -22,12 +22,9 @@ body {
     padding: 10px 10px;
 }
 
-.hero p {
-    position: absolute;
-    bottom: 8px;
-    left: 50px;
-    margin-left: 320px;
+.description {
     padding: 5px 10px;
+    background-color: cornflowerblue;
 }
 
 main {
@@ -38,28 +35,38 @@ main {
     justify-content: space-evenly;
 }
 
-footer {
-    height: 10%;
-
-    border: solid black 1px;
+/* input/ iframe styles */
+.left {
+    background-color: rgb(85, 106, 197);
+    border: 3px solid darkblue;
 }
 
-/* .container {
-    width: 50%;
-
-    align-items: center;
-}*/
+.right {
+    border: 3px solid darkblue;
+    background-color: rgb(238, 241, 247);
+}
 
 .input-form {
     height: 30%;
-
-    border: solid black 1px;
+    background-color: rgb(238, 241, 247);
 }
 
-.iframe-container {
-    margin-top: 15%;
-    height: 60%;
-    border: solid black 1px;
+.iframe {
+    height: 63%;
+    margin: 2rem 1rem;
+}
+
+.no-trips {
+    text-align: center;
+    color: darkblue;
+}
+
+/* footer styles */
+footer {
+    height: 10%;
+    background-color: cornflowerblue;
+    font: 30px Georgia;
+    padding-top: 40px;
 }
 
 /* Forecast Modal */

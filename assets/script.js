@@ -530,7 +530,7 @@ var loadTrips = function() {
         savedTrips = [];
 
         var noTripsMessage = document.createElement("h4");
-        noTripsMessage.className = "";
+        noTripsMessage.className = "no-trips";
         noTripsMessage.id = "no-trips-message";
         noTripsMessage.textContent = "You don't have any saved trips! Input a city to get started.";
         tripsContainer.appendChild(noTripsMessage);
@@ -575,5 +575,4 @@ var getMap = function(lat, lon) {
 
 /////////////////// CALL FUNCTIONS //////////////////
 loadTrips();
-// $("#trip-title").on("click", renameTrip);
 locationInputEl.addEventListener("submit", getLocation);
