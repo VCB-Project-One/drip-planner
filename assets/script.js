@@ -171,7 +171,7 @@ var generateForecast = function(array) {
         timeContainer.dataset.isDayTime = array[i].isDayTime;
         timeContainer.dataset.relativeDate = array[i].relativeDate;
         timeContainer.dataset.absoluteDate = array[i].absoluteDate;
-        timeContainer.style = "display: inline-block; background-image: url(" + array[i].icon + ");";
+        timeContainer.style = "display: inline-block; saveground-image: url(" + array[i].icon + ");";
         dayContainer.appendChild(timeContainer);
 
         var infoContainer = document.createElement("div");
@@ -295,7 +295,11 @@ var addButtonHandler = function(event) {
             //update savedTrips
             savedTrips[currentTrip.index] = currentTrip;
 
-            saveTrips;
+            // set to localStorage
+            saveTrips();
+
+            //generate updated array
+            generateTrip();
         }
         else (console.log("Error dealing with currentTrip"))
     } 
@@ -310,8 +314,15 @@ var generateList = function() {
         currentTrip = null;
 
         // delete everything but trip title
-        $("#trip-container").children().filter(":not(#trip-title)").remove();
+        $("#trip-container").children().remove();
     }
+
+    //generate title
+    var containerTitle = document.createElement("h3");
+    containerTitle.className = "text-center";
+    containerTitle.id = "trip-title";
+    containerTitle.textContent = "Saved Trips"
+    tripsContainer.appendChild(containerTitle);
 
     // generate list container
     var listContainer = document.createElement("div");
@@ -359,6 +370,9 @@ var deleteListItem = function() {
 }
 
 var generateTrip = function(event) {
+    // delete everything but trip title
+    $("#trip-container").children().remove();
+    // $("#trip-container").children().filter(":not(#trip-title)").remove();
 
     if (currentTrip === null) {
         // get data-id of trip
@@ -373,9 +387,17 @@ var generateTrip = function(event) {
     
     console.log(stops);
 
+    // create input element
+    var inputContainer = document.createElement("div");
+    inputContainer.className = "d-flex justify-content-center"
+    tripsContainer.appendChild(inputContainer);
 
-    // Edit title
-    $("#trip-title").text(currentTrip.name);
+    var titleEdit = document.createElement("input");
+    titleEdit.type = "text";
+    titleEdit.className = "text-center";
+    titleEdit.id = "title-edit"
+    titleEdit.value = currentTrip.name;
+    inputContainer.appendChild(titleEdit);    
 
     // get rid of lists
     if ($("#list-container")) {
@@ -384,9 +406,10 @@ var generateTrip = function(event) {
 
     // Body (generate cards)
     for (i=0; i < stops.length; i++) {
+        
         var dayContainer = document.createElement("div");
         dayContainer.className = "day-container col-12";
-        dayContainer.innerHTML = "<h6>" + stops[i].name +"</h6>"
+        dayContainer.innerHTML = "<h6>" + stops[i].name +"<h6>"
         dayContainer.dataset.date = currentTrip.date
         $("#trip-container").append(dayContainer);
 
@@ -403,7 +426,7 @@ var generateTrip = function(event) {
         timeContainer.dataset.isDayTime = stops[i].isDayTime;
         timeContainer.dataset.relativeDate = stops[i].relativeDate;
         timeContainer.dataset.absoluteDate = stops[i].absoluteDate;
-        timeContainer.style = "display: inline-block; background-image: url(" + stops[i].icon + ");";
+        timeContainer.style = "display: inline-block; saveground-image: url(" + stops[i].icon + ");";
         cardRow.appendChild(timeContainer);
 
         var infoContainer = document.createElement("div");
@@ -429,13 +452,17 @@ var generateTrip = function(event) {
         infoContainer.appendChild(detailsBtn);
     }
 
-    // add back button to allow user to return to trips list
-    var backBtn = document.createElement("button");
-    backBtn.className = "btn btn-primary";
-    backBtn.textContent = "Back"
-    tripsContainer.appendChild(backBtn);
+    // add save button to allow user to return to trips list
+    var saveBtn = document.createElement("button");
+    saveBtn.className = "btn btn-primary";
+    saveBtn.textContent = "Save"
+    tripsContainer.appendChild(saveBtn);
 
-    backBtn.addEventListener("click", function() {
+    saveBtn.addEventListener("click", function() {
+        // Update trip name
+        var newTripTitle = $("#title-edit").val();
+        currentTrip.name = newTripTitle;
+
         generateList();
     });
 
@@ -444,6 +471,11 @@ var generateTrip = function(event) {
 }
 
 var saveTrips = function() {
+    if (currentTrip != null) {
+        var newName = $("#tripNameEdit").val();
+        currentTrip.name = newName;
+    }
+
     localStorage.setItem("Trips", JSON.stringify(savedTrips));
 };
 
@@ -470,13 +502,54 @@ var loadTrips = function() {
         if (savedTrips === null) {
             savedTrips = [];
         } else {
-            // turn from string back into js object
+            // turn from string save into js object
             savedTrips = JSON.parse(savedTrips);
         }
         // Generate HTML inside trip container
         generateList();
     }
 }
+
+// var renameTrip = function(event) {
+//     if (currentTrip != null) {
+//         // set up variables for oldName and textArea
+//         var oldName = $(this).text()
+//         console.log(oldName);
+
+//         var textInput = $("<textarea>")
+//             .addClass("form-control text-center")
+//             .attr("id", "title-edit")
+//             .val(oldName);
+
+//         // replace text with textInput
+//         $(this).replaceWith(textInput);
+//         textInput.trigger("focus");
+
+//         // update and save task
+//         $("#title-edit").on("blur", "textarea", function() {
+
+//             console.log("blur happening");
+
+//             // get the textarea's current value/text
+//             var newText = $(this)
+//                 .val();
+
+//             // recreate h3 element
+//             var titleH3 = $("<h3>")
+//                 .addClass("text-center")
+//                 .attr("id", "trip-title")
+//                 .text(newText);
+            
+//             // replace textarea with <h3>
+//             $(this).replaceWith(titleH3);
+            
+//             // save trips
+//             saveTrips();
+
+//         })
+//     }
+// }
+
 
 var getMap = function(lat, lon) {
     // if map is not initiated, generate map. otherwise set new View and add marker
@@ -502,4 +575,5 @@ var getMap = function(lat, lon) {
 
 /////////////////// CALL FUNCTIONS //////////////////
 loadTrips();
+// $("#trip-title").on("click", renameTrip);
 locationInputEl.addEventListener("submit", getLocation);
