@@ -12,9 +12,12 @@ var currentTrip = null;
 var tripsContainer = document.querySelector("#trip-container");
 var listContainer = null;
 var locationInputEl = document.querySelector("#destination-form");
-var CityInputEl = document.querySelector("#destination");
+var cityInputEl = document.querySelector("#destination");
+var stateInputEl = document.querySelector("#state");
 var MapDivEl = document.querySelector("#map");
 
+// map variable
+var map = null;
 // lat/lon variables
 var lat = null;
 var lon = null;
@@ -25,7 +28,9 @@ $('#tripModal').modal({ show: false});
 // function to get the city name from input
 var getLocation = function(event) {
     event.preventDefault();
-    var city = CityInputEl.value.trim();
+    var city = cityInputEl.value.trim();
+    var state = stateInputEl.value.trim();
+    console.log(state);
     getCoords(city);
 }
 
@@ -467,28 +472,26 @@ var loadTrips = function() {
 }
 
 var getMap = function(lat, lon) {
-    MapDivEl.innerHTML = "";
+    // if map is not initiated, generate map. otherwise set new View and add marker
+    if (map === null) {
+        map = L.map('map').setView([lat, lon], 13);
 
-    var map = L.map('map').setView([lat, lon], 13);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1Ijoid2luZ3JhbTEiLCJhIjoiY2t5dzl6Z2t1MDYyNjJucXBiNHdvcTd5diJ9.GqWwwJ4INQXw49NCNZuEQQ'
+        }).addTo(map);
 
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/streets-v11',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'pk.eyJ1Ijoid2luZ3JhbTEiLCJhIjoiY2t5dzl6Z2t1MDYyNjJucXBiNHdvcTd5diJ9.GqWwwJ4INQXw49NCNZuEQQ'
-    }).addTo(map);
-    function mapClick(e) {
-        var mapLat = (e.latlng.lat);
-        var mapLon = (e.latlng.lng);
-        getForecast(mapLat, mapLon);
+        L.marker([lat, lon]).addTo(map);
+    } else {
+        map.setView([lat, lon], 13);
+
+        L.marker([lat, lon]).addTo(map);
     }
-
-    map.on("click", mapClick);
 };
-
-
 
 /////////////////// CALL FUNCTIONS //////////////////
 loadTrips();
