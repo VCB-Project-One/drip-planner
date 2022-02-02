@@ -305,8 +305,13 @@ var addButtonHandler = function(event) {
 }
 
 var generateList = function() {
-    // delete any trip in the container
-    $("#list-title").siblings().remove();
+    // reset currentTrip
+    if (currentTrip != null) {
+        currentTrip = null;
+
+        // delete everything but trip title
+        $("#trip-container").children().filter(":not(#trip-title)").remove();
+    }
 
     // generate list container
     var listContainer = document.createElement("div");
@@ -427,7 +432,9 @@ var generateTrip = function(event) {
     backBtn.textContent = "Back"
     tripsContainer.appendChild(backBtn);
 
-    backBtn.addEventListener("click", generateList);
+    backBtn.addEventListener("click", function() {
+        generateList();
+    });
 
     // set currentTrip to chosenTrip
     currentTrip = chosenTrip;
