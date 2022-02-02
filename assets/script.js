@@ -379,6 +379,8 @@ var loadTrips = function() {
     if (savedTrips === [] || savedTrips === null) {
         console.log("You don't have any saved trips!")
 
+        savedTrips = [];
+
         var noTripsMessage = document.createElement("h4");
         noTripsMessage.className = "";
         noTripsMessage.id = "no-trips-message";
