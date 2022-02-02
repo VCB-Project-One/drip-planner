@@ -130,6 +130,7 @@ footer {
     margin-right: 5px;
     border: 1px black solid;
     color: lightblue;
+    width: fit-content;
 }
 
 .add-btn {
@@ -137,6 +138,7 @@ footer {
     border-radius: 10%;
     color: white;
     border: black;
+    width: fit-content;
 }
 
 .details-overlay {
@@ -164,4 +166,8 @@ footer {
 #details-close-btn {
     position: relative;
     margin-left: 50%;
+}
+
+.modal-body .day-container {
+    flex-direction: column;
 }

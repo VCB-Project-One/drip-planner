@@ -1,5 +1,6 @@
 var forecastContainer = document.querySelector("#forecast-container");
 var forecastArray = [];
+var savedCards = [];
 var forecastHeader = document.querySelector("#forecast-header");
 var forecastLocation = {
     city: null,
@@ -15,6 +16,9 @@ var MapDivEl = document.querySelector("#map");
 // lat/lon variables
 var lat = null;
 var lon = null;
+
+// initialize modals
+$('#tripModal').modal({ show: false});
 
 // function to get the city name from input
 var getLocation = function(event) {
@@ -85,13 +89,16 @@ var getForecast = function(lat, lon) {
                                     var tempObject = {
                                         name: sevenDay[i].name,
                                         date: formattedDate,
+                                        city: forecastLocation.city,
+                                        state: forecastLocation.state,
                                         shortForecast: sevenDay[i].shortForecast,
                                         temperature: sevenDay[i].temperature + "°" + sevenDay[i].temperatureUnit,
                                         windSpeed: sevenDay[i].windSpeed,
                                         detailedForecast: sevenDay[i].detailedForecast,
                                         isDaytime: sevenDay[i].isDaytime,
                                         icon: sevenDay[i].icon,
-
+                                        relativeDate: sevenDay[i].number, // for resetTrip function
+                                        absoluteDate: sevenDay[i].startTime // for updateTrip function
                                     };
 
                                     // push tempObject to forecastArray
@@ -124,13 +131,10 @@ var generateForecast = function(array) {
         content[0].parentNode.removeChild(content[0]);
     }
 
-    
-    //TODO: make forecast appear in a modal
-
-    // make modal invisible
+    // GENERATE FORECAST MODAL
     modalOverlay.style.visibility = "visible";
     
-    // make map iframe invisible (???)
+    // make map iframe invisible (???) - was causing issues
     MapDivEl.style.visibility = "hidden";
 
     // close button functionality
@@ -144,7 +148,6 @@ var generateForecast = function(array) {
     
     // convert array from JSON object to string
     JSON.stringify(array);
-    // var dayContainer = null;
 
     for (i=0; i<array.length; i++) {
         // create container for individual forecast
@@ -156,6 +159,11 @@ var generateForecast = function(array) {
 
         var timeContainer = document.createElement("div");
         timeContainer.className = "time-container";
+        timeContainer.id = "tempCard-" + i;
+        timeContainer.dataset.id = "timeCard-" + i;
+        timeContainer.dataset.isDayTime = array[i].isDayTime;
+        timeContainer.dataset.relativeDate = array[i].relativeDate;
+        timeContainer.dataset.absoluteDate = array[i].absoluteDate;
         timeContainer.style = "display: inline-block; background-image: url(" + array[i].icon + ");";
         dayContainer.appendChild(timeContainer);
 
@@ -163,10 +171,10 @@ var generateForecast = function(array) {
         infoContainer.className = "info-container card";
         timeContainer.appendChild(infoContainer);
 
-        var dayName = document.createElement("h3");
-        dayName.className = "";
-        dayName.innerHTML = array[i].name + " (" + array[i].date + ")";
-        infoContainer.appendChild(dayName);
+        var cityName = document.createElement("h3");
+        cityName.className = "";
+        cityName.innerHTML = forecastLocation.city + ", " + forecastLocation.state;
+        infoContainer.appendChild(cityName);
 
         var dayDetails = document.createElement("p");
         dayDetails.className = "";
@@ -177,42 +185,165 @@ var generateForecast = function(array) {
 
         var detailsBtn = document.createElement("button");
         detailsBtn.className = "details-btn";
-        detailsBtn.dataset.forecastIndex = i;
+        detailsBtn.dataset.details = array[i].detailedForecast;
         detailsBtn.textContent = "More Details";
         infoContainer.appendChild(detailsBtn);
 
         var addBtn = document.createElement("button");
         addBtn.className = "add-btn";
         addBtn.dataset.forecastIndex = i;
+        addBtn.dataset.details = array[i].detailedForecast;
+        addBtn.dataset.toggle = "modal";
+        addBtn.dataset.target = "#exampleModal";
         addBtn.textContent = "Add to Trip";
-        infoContainer.appendChild(addBtn);   
-
+        infoContainer.appendChild(addBtn);  
     }
+    
+    // See additional details for forecast card
+    $(".details-btn").on("click", detailsButtonHandler)
 
-    $(".details-btn").on("click", function() {
-        let modalText = forecastArray[$(this).data("forecastIndex")].detailedForecast;
-        var detailsText = document.querySelector("#detailed-forecast");
+    // ADD FORECAST CARD TO TRIP
+    $(".add-btn").on("click", function() {  
 
-        //make details modal visible
-        $("#details-overlay").css("visibility", "visible");
+        //create new variable using clicked object
+        forecastIndex = $(this).data("forecastIndex");
 
-        //modal close button
-        $("#details-close-btn").on("click", function(){
-            $("#details-overlay").css("visibility", "hidden");
-        });
 
-        //set text to detailed forecast
-        detailsText.textContent = JSON.stringify(modalText);
-    })
+        //GET trip you need; if no trips, make a new one
+        if (savedTrips.length === 0) {
+        
+            // set trip name
+            var tripName = "Trip " + (savedTrips.length + 1);
 
-    $(".add-btn").on("click", function() {
-        console.log("add button with data-forecastIndex of [" + $(this).data("forecastIndex") + "] has been clicked");
+            // Make new trip object
+            var currentTrip = {
+                name: tripName,
+                stops: [], //STOP is an object; going to make a function to generate cards based on stop
+            }
+
+            // Make trip stops object
+            var newStop = forecastArray[forecastIndex];
+
+            console.log(newStop);
+
+            //// GENERATE HTML ////
+            // Show Modal
+            generateEditModal(tripName);
+
+            // Title
+            $("#editModalTitle").text(tripName);
+
+            // Body
+            var dayContainer = document.createElement("div");
+            dayContainer.className = "day-container col-12";
+            dayContainer.innerHTML = "<h6>" + newStop.name +"</h6>"
+            dayContainer.dataset.date = newStop.date
+            $("#editModalBody").append(dayContainer);
+
+            var cardContainer = document.createElement("div");
+            cardContainer.className = "container";
+            dayContainer.appendChild(cardContainer);
+
+            var cardRow = document.createElement("div");
+            cardRow.className = "row";
+            cardContainer.appendChild(cardRow);
+
+            var timeContainer = document.createElement("div");
+            timeContainer.className = "time-container";
+            timeContainer.dataset.isDayTime = newStop.isDayTime;
+            timeContainer.dataset.relativeDate = newStop.relativeDate;
+            timeContainer.dataset.absoluteDate = newStop.absoluteDate;
+            timeContainer.style = "display: inline-block; background-image: url(" + newStop.icon + ");";
+            cardContainer.appendChild(timeContainer);
+    
+            var infoContainer = document.createElement("div");
+            infoContainer.className = "info-container card";
+            timeContainer.appendChild(infoContainer);
+    
+            var dayName = document.createElement("h3");
+            dayName.className = "";
+            dayName.innerHTML = newStop.city, newStop.state;
+            infoContainer.appendChild(dayName);
+    
+            var dayDetails = document.createElement("p");
+            dayDetails.className = "";
+            dayDetails.innerHTML = "Skies: " + newStop.shortForecast + 
+                "</br>Temperature: " + newStop.temperature +
+                "</br>Wind Speed: " + newStop.windSpeed;
+            infoContainer.appendChild(dayDetails);
+    
+            var detailsBtn = document.createElement("button");
+            detailsBtn.className = "details-btn";
+            detailsBtn.dataset.details = newStop.detailedForecast;
+            detailsBtn.textContent = "More Details";
+            infoContainer.appendChild(detailsBtn);
+
+            // See additional details for forecast card
+            // TODO: bug causing details modal to appear underneath other modal
+            $(".details-btn").on("click", detailsButtonHandler)
+        } 
+        else if (savedTrips.length > 0) {
+            //create new variable using clicked object
+            console.log("You have saved trips already, let's pick one")
+
+            // TODO: show tripsList
+            
+            // TODO: take user input to select trip, add card based on relativeDate (update trip first?)
+        } 
+        else {
+            console.log("Error loading savedTrips")
+        }
     })
 }
+
+var detailsButtonHandler = function(event) {
+    console.log("details button clicked");
+    console.log(event.target.dataset.details)
+
+    let modalText = event.target.dataset.details;
+    var detailsText = document.querySelector("#detailed-forecast");
+
+    //make details modal visible
+    $("#details-overlay").css("visibility", "visible");
+
+    //modal close button
+    $("#details-close-btn").on("click", function(){
+        $("#details-overlay").css("visibility", "hidden");
+    });
+
+    //set text to detailed forecast
+    detailsText.textContent = JSON.stringify(modalText);
+}
+
+var generateEditModal = function(tripId) {
+
+    // delete existing content
+    $("#editModalBody").empty();
+
+    //Make trip modal visible
+    $("#editModal").modal("show");
+
+    //edit values of the modal
+    $("#editModalTitle").text(tripId);
+                
+
+
+    // click functions
+    $("#editModalClose").on("click", function() {
+        console.log("close button clicked");
+        $("#editModal").modal("dispose");   
+    })
+
+    $("#editModalSave").on("click", function() {
+        console.log("save button clicked")
+        // currentTrip.stops.push(forecastArray[forecastIndex])
+    })
+};
+
 
 var saveTrip = function() {
-    console.log("Trip saved")
-}
+    console.log("Trip saved");
+};
 
 var loadTrips = function() {
     //get savedTrips from local storage
@@ -228,7 +359,6 @@ var loadTrips = function() {
     }
     else {
         console.log("Saved trips: " + savedTrips)
-
     }
 }
 
@@ -260,4 +390,3 @@ var getMap = function(lat, lon) {
 // getForecast();
 loadTrips();
 locationInputEl.addEventListener("submit", getLocation);
-
