@@ -8,7 +8,7 @@ var forecastLocation = {
 };
 var modalOverlay = document.querySelector("#modal-overlay");
 var savedTrips = [];
-var currentTrip = {};
+var currentTrip = null;
 var tripsContainer = document.querySelector("#trip-container")
 var locationInputEl = document.querySelector("#destination-form");
 var CityInputEl = document.querySelector("#destination");
@@ -280,13 +280,14 @@ var addButtonHandler = function(event) {
     } 
     else if (savedTrips.length > 0) {
         // if no trip selected, tell them to select one
-        if (currentTrip === {}) {
+        if (currentTrip === null ) {
             console.log("No trip selected. Select a trip first!")
         }
-        else {
+        else if (currentTrip) {
             var newStop = forecastArray[forecastIndex];
+            console.log(newStop)
 
-            currentTrip.stops.push(newStop);
+            currentTrip.stops.push(newStop); //
             console.log("Updated currentTrip: " + JSON.stringify(currentTrip.stops))
 
             currentTrip.stops.sort(function(a, b){return a.relativeDate - b.relativeDate});
@@ -297,6 +298,7 @@ var addButtonHandler = function(event) {
 
             saveTrips;
         }
+        else (console.log("Error dealing with currentTrip"))
     } 
     else {
         console.log("Error loading savedTrips")
@@ -305,12 +307,20 @@ var addButtonHandler = function(event) {
 
 var generateList = function() {
     // generate list of trips from savedTrips
+    for (i=0; i<savedTrips.length; i++) {
+        var workingListItem = document.createElement("h4");
+        workingListItem.className = "";
+        workingListItem.id = "trip-list-item-" + i;
+        workingListItem.textContent = savedTrips[i].name;
+        tripsContainer.appendChild(workingListItem);
 
+        //TODO: make container for h4 element
+
+        //TODO: make edit & delete buttons
+    }
 }
 
 var generateTrip = function(chosenTrip) {
-
-
     //// GENERATE HTML ////
     // Title
     $("#trip-title").text(chosenTrip.name);
@@ -394,7 +404,7 @@ var loadTrips = function() {
             savedTrips = JSON.parse(savedTrips);
         }
         // Generate HTML inside trip container
-        // generateList
+        generateList();
     }
 }
 
