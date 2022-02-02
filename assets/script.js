@@ -346,7 +346,7 @@ var generateList = function() {
         workingListItem.className = "bg-white border border-dark rounded w-95 m-1";
         workingListItem.id = "trip-list-item-" + i;
         workingListItem.dataset.id = i;
-        listContainer.appendChild(workingListItem);
+        // listContainer.appendChild(workingListItem);
 
         var workingListTitle = document.createElement("h4");
         workingListTitle.className = "";
@@ -355,7 +355,9 @@ var generateList = function() {
 
         //TODO: make container for h4 element
         var savedTripContainer = document.createElement("div");
+        savedTripContainer.id = "trip-container-" + i;
         savedTripContainer.appendChild(workingListItem);
+
         //TODO: make edit & delete buttons
         var editBtn = document.createElement("button");
         editBtn.className = "edit-btn";
@@ -364,6 +366,7 @@ var generateList = function() {
 
         var deleteBtn =  document.createElement("button");
         deleteBtn.className = "delete-btn";
+        deleteBtn.dataset.index = i;
         deleteBtn.textContent = "Delete";
         workingListItem.appendChild(deleteBtn);
 
@@ -379,7 +382,7 @@ var newTripHandler = function(event) {
 
     // make empty trip object
     var newTrip = {
-        name: "Trip " + savedTrips.length,
+        name: "Trip " + (savedTrips.length + 1),
         stops: [],
         index: savedTrips.length
     }
@@ -393,8 +396,18 @@ var newTripHandler = function(event) {
 
 }
 
-var deleteListItem = function() {
+var deleteListItem = function(event) {
     console.log("Delete trip button clicked")
+
+    //remove html element
+    var elementIndex = event.target.getAttribute("data-index");
+    
+    $("#trip-container-" + elementIndex).remove()
+
+    // splice from savedTrips array
+    savedTrips.splice(elementIndex, 1);
+
+    saveTrips();
 }
 
 var generateTrip = function(event) {
@@ -416,7 +429,7 @@ var generateTrip = function(event) {
 
     // create input element
     var inputContainer = document.createElement("div");
-    inputContainer.className = "d-flex justify-content-center"
+    inputContainer.className = "d-flex flex-column align-items-top"
     tripsContainer.appendChild(inputContainer);
 
     var titleEdit = document.createElement("input");
