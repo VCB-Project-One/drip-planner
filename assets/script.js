@@ -7,6 +7,7 @@ var forecastLocation = {
     state: null
 };
 var modalOverlay = document.querySelector("#modal-overlay");
+var modalActive = false;
 var savedTrips = [];
 var currentTrip = null;
 var tripsContainer = document.querySelector("#trip-container");
@@ -141,6 +142,7 @@ var generateForecast = function(array) {
 
     // GENERATE FORECAST MODAL
     modalOverlay.style.visibility = "visible";
+    modalActive = true;
     
     // make map iframe invisible (???) - was causing issues
     MapDivEl.style.visibility = "hidden";
@@ -149,6 +151,7 @@ var generateForecast = function(array) {
     $("#forecast-close-btn").on("click", function() {
         modalOverlay.style.visibility = "hidden";
         MapDivEl.style.visibility = "visible";
+        modalActive = false;
     });
 
     // set forecast header to relativeLocation city and state
@@ -172,7 +175,7 @@ var generateForecast = function(array) {
         timeContainer.dataset.isDayTime = array[i].isDayTime;
         timeContainer.dataset.relativeDate = array[i].relativeDate;
         timeContainer.dataset.absoluteDate = array[i].absoluteDate;
-        timeContainer.style = "display: inline-block; saveground-image: url(" + array[i].icon + ");";
+        timeContainer.style = "display: inline-block; background-image: url(" + array[i].icon + ");";
         dayContainer.appendChild(timeContainer);
 
         var infoContainer = document.createElement("div");
@@ -229,7 +232,9 @@ var detailsButtonHandler = function(event) {
     //modal close button
     $("#details-close-btn").on("click", function(){
         $("#details-overlay").css("visibility", "hidden");
-        MapDivEl.style.visibility = "visible";
+        if (modalActive == false) {
+            MapDivEl.style.visibility = "visible";
+        }
     });
 
     //set text to detailed forecast
@@ -464,7 +469,7 @@ var generateTrip = function(event) {
         timeContainer.dataset.isDayTime = stops[i].isDayTime;
         timeContainer.dataset.relativeDate = stops[i].relativeDate;
         timeContainer.dataset.absoluteDate = stops[i].absoluteDate;
-        timeContainer.style = "display: inline-block; saveground-image: url(" + stops[i].icon + ");";
+        timeContainer.style = "display: inline-block; background-image: url(" + stops[i].icon + ");";
         cardRow.appendChild(timeContainer);
 
         var infoContainer = document.createElement("div");
