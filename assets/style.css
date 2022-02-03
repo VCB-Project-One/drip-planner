@@ -183,3 +183,7 @@ footer {
 #trip-container {
     overflow:auto;
 }
+
+#map {
+    height: 100%;
+}
