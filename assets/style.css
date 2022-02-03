@@ -179,3 +179,7 @@ footer {
 .modal-body .day-container {
     flex-direction: column;
 }
+
+#trip-container {
+    overflow:auto;
+}

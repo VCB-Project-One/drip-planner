@@ -447,19 +447,17 @@ var generateTrip = function(event) {
     // Body (generate cards)
     for (i=0; i < stops.length; i++) {
         
-        var dayContainer = document.createElement("div");
-        dayContainer.className = "day-container col-12";
-        dayContainer.innerHTML = "<h6>" + stops[i].name +"<h6>"
-        dayContainer.dataset.date = currentTrip.date
-        $("#trip-container").append(dayContainer);
+        if (stops[i].isDayTime === true || !document.querySelector("#d" + stops[i].date)) {
+            var dayContainer = document.createElement("div");
+            dayContainer.className = "day-container d-flex flex-column";
+            dayContainer.innerHTML = "<h6>" + stops[i].name +"<h6>"
+            dayContainer.id = "d" + stops[i].date
+            $("#trip-container").append(dayContainer);
 
-        var cardContainer = document.createElement("div");
-        cardContainer.className = "container";
-        dayContainer.appendChild(cardContainer);
-
-        var cardRow = document.createElement("div");
-        cardRow.className = "row";
-        cardContainer.appendChild(cardRow);
+            var cardRow = document.createElement("div");
+            cardRow.className = "row";
+            dayContainer.appendChild(cardRow);
+        }
 
         var timeContainer = document.createElement("div");
         timeContainer.className = "time-container";
