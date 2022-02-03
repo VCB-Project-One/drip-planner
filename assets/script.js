@@ -18,7 +18,7 @@ var MapDivEl = document.querySelector("#map");
 
 // map variable
 var map = null;
-// lat/lon variables
+// lat/lon variables for nashville
 var lat = null;
 var lon = null;
 
@@ -572,5 +572,6 @@ var getMap = function(lat, lon) {
 };
 
 /////////////////// CALL FUNCTIONS //////////////////
+getMap(36.1627, -86.7816); //hardcoded set to nashville
 loadTrips();
 locationInputEl.addEventListener("submit", getLocation);
