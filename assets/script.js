@@ -215,6 +215,7 @@ var generateForecast = function(array) {
 
     // ADD FORECAST CARD TO TRIP
     $(".add-btn").on("click", addButtonHandler)
+    
 }
 
 var detailsButtonHandler = function(event) {
@@ -240,7 +241,6 @@ var detailsButtonHandler = function(event) {
     //set text to detailed forecast
     detailsText.textContent = JSON.stringify(modalText);
 }
-
 
 var addButtonHandler = function(event) {  
     // hide modal, show map
@@ -493,6 +493,19 @@ var generateTrip = function(event) {
         detailsBtn.dataset.details = stops[i].detailedForecast;
         detailsBtn.textContent = "More Details";
         infoContainer.appendChild(detailsBtn);
+
+        var deleteBtn = document.createElement("button")
+        deleteBtn.className = "delete-btn";
+        deleteBtn.dataset.id = i;
+        deleteBtn.textContent = "Delete Forecast";
+        infoContainer.appendChild(deleteBtn);
+
+        // delete forecast container
+        deleteBtn.addEventListener("click", function(event) {
+            var forecastCard = event.target.parentNode.parentNode.parentNode.parentNode;
+            tripsContainer.removeChild(forecastCard);
+            currentTrip.stops.splice(event.target.dataset.id, 1);
+        });
     }
 
     // add save button to allow user to return to trips list
@@ -527,6 +540,7 @@ var generateTrip = function(event) {
 
     // See additional details for forecast card
     $(".details-btn").on("click", detailsButtonHandler)
+
 }
 
 var saveTrips = function() {
