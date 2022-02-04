@@ -575,8 +575,15 @@ var getMap = function(lat, lon) {
         L.marker([lat, lon]).addTo(map);
     }
 };
-
+var mapClick = function(e) {
+    // get lat and lon from the mouse click location
+    var lat = e.latlng.lat;
+    var lon = e.latlng.lng;
+    // generate
+    getForecast(lat, lon);
+}
 /////////////////// CALL FUNCTIONS //////////////////
 getMap(36.1627, -86.7816); //hardcoded set to nashville
 loadTrips();
 locationInputEl.addEventListener("submit", getLocation);
+map.on("click", mapClick);
