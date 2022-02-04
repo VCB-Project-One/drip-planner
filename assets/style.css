@@ -142,7 +142,7 @@ footer {
 }
 
 .delete-btn {
-    background-color: navy;
+    background-color: red;
     border-radius: 10%;
     margin-right: 5px;
     border: 1px black solid;

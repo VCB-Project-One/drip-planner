@@ -290,13 +290,11 @@ var addButtonHandler = function(event) {
         }
         else if (currentTrip) {
             var newStop = forecastArray[forecastIndex];
-            console.log(newStop)
+            console.log(newStop);
 
-            currentTrip.stops.push(newStop); //
-            console.log("Updated currentTrip: " + JSON.stringify(currentTrip.stops))
+            currentTrip.stops.push(newStop); 
 
             currentTrip.stops.sort(function(a, b){return a.relativeDate - b.relativeDate});
-            console.log("Sorted currentTrip: " + JSON.stringify(currentTrip.stops));
 
             //update savedTrips
             savedTrips[currentTrip.index] = currentTrip;
@@ -365,12 +363,12 @@ var generateList = function() {
 
         //edit & delete buttons
         var editBtn = document.createElement("button");
-        editBtn.className = "edit-btn";
+        editBtn.className = "edit-btn btn btn-primary";
         editBtn.textContent = "Edit"
         workingListItem.appendChild(editBtn);
 
         var deleteBtn =  document.createElement("button");
-        deleteBtn.className = "delete-btn";
+        deleteBtn.className = "btn btn-secondary delete-btn";
         deleteBtn.dataset.index = i;
         deleteBtn.textContent = "Delete";
         workingListItem.appendChild(deleteBtn);
@@ -398,7 +396,6 @@ var newTripHandler = function(event) {
     currentTrip = newTrip;
 
     generateTrip();
-
 }
 
 var deleteListItem = function(event) {
@@ -429,8 +426,6 @@ var generateTrip = function(event) {
 
     //get array of forecast cards to pull from
     var stops = currentTrip.stops;
-    
-    console.log(stops);
 
     // create input element
     var inputContainer = document.createElement("div");
@@ -461,28 +456,31 @@ var generateTrip = function(event) {
 
             var cardRow = document.createElement("div");
             cardRow.className = "row";
+            cardRow.id = dayContainer.id + "-row";
             dayContainer.appendChild(cardRow);
         }
 
         var timeContainer = document.createElement("div");
         timeContainer.className = "time-container";
-        timeContainer.dataset.isDayTime = stops[i].isDayTime;
+        timeContainer.id = "t" + stops[i].absoluteDate;
+        timeContainer.dataset.isDayTime = "t" + stops[i].absoluteDate.toString();
+        timeContainer.dataset.index = i.toString();
         timeContainer.dataset.relativeDate = stops[i].relativeDate;
         timeContainer.dataset.absoluteDate = stops[i].absoluteDate;
-        timeContainer.style = "display: inline-block; background-image: url(" + stops[i].icon + ");";
+        timeContainer.style = "display: inline-block; background-image: url(" + stops[i].icon + "); background-size: cover";
         cardRow.appendChild(timeContainer);
 
         var infoContainer = document.createElement("div");
         infoContainer.className = "info-container card";
         timeContainer.appendChild(infoContainer);
 
-        var dayName = document.createElement("h3");
-        dayName.className = "";
-        dayName.textContent = stops[i].city, stops[i].state;
-        infoContainer.appendChild(dayName);
+        var cityName = document.createElement("h3");
+        cityName.style = "padding-bottom: 1.1em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+        cityName.textContent = stops[i].city + ", " + stops[i].state;
+        infoContainer.appendChild(cityName);
 
         var dayDetails = document.createElement("p");
-        dayDetails.className = "";
+        dayDetails.style = "margin-top: auto;";
         dayDetails.innerHTML = "Skies: " + stops[i].shortForecast + 
             "</br>Temperature: " + stops[i].temperature +
             "</br>Wind Speed: " + stops[i].windSpeed;
@@ -496,15 +494,37 @@ var generateTrip = function(event) {
 
         var deleteBtn = document.createElement("button")
         deleteBtn.className = "delete-btn";
-        deleteBtn.dataset.id = i;
-        deleteBtn.textContent = "Delete Forecast";
+        deleteBtn.id = "t" + stops[i].absoluteDate + '-deleteBtn';
+        deleteBtn.dataset.index = i.toString();
+        deleteBtn.textContent = "Delete";
         infoContainer.appendChild(deleteBtn);
 
         // delete forecast container
         deleteBtn.addEventListener("click", function(event) {
-            var forecastCard = event.target.parentNode.parentNode.parentNode.parentNode;
-            tripsContainer.removeChild(forecastCard);
-            currentTrip.stops.splice(event.target.dataset.id, 1);
+            var forecastCard = document.getElementById(event.target.parentNode.parentNode.id);
+            var cardRowContainer = document.getElementById(event.target.parentNode.parentNode.parentNode.id);
+
+            // remove card
+            cardRowContainer.removeChild(forecastCard);
+
+            // if cardRowContainer is empty, delete dayContainer
+            if (cardRowContainer.childElementCount === 0) {
+                document.getElementById(cardRowContainer.parentNode.id).remove();
+            }
+
+            // update array
+            currentTrip.stops.splice(event.target.dataset.index, 1);
+
+            console.log("before loop: " + JSON.stringify(currentTrip.stops));
+
+            // update data-index attributes of deleteBtn's
+            for (i=0; i<stops.length; i++) {
+                var currentTimeCard = document.getElementById("t" + currentTrip.stops[i].absoluteDate.toString());
+                var currentDeleteBtn = document.getElementById(currentTimeCard.id + "-deleteBtn");
+
+                currentTimeCard.setAttribute("data-index", i);
+                currentDeleteBtn.setAttribute("data-index", i);
+            }
         });
     }
 
@@ -563,7 +583,6 @@ var loadTrips = function() {
         tripsContainer.appendChild(noTripsMessage);
     }
     else {
-        console.log("Saved trips: " + savedTrips)
         savedTrips = localStorage.getItem("Trips");
 
         //check if any trips; if not, set to empty array
