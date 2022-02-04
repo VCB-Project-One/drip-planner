@@ -280,7 +280,7 @@ var addButtonHandler = function(event) {
         // Set to localStorage
         saveTrips();
 
-        // TODO: Generate HTML
+        // Generate HTML
         generateTrip();
     } 
     else if (savedTrips.length > 0) {
@@ -358,12 +358,12 @@ var generateList = function() {
         workingListTitle.textContent = savedTrips[i].name;
         workingListItem.appendChild(workingListTitle);
 
-        //TODO: make container for h4 element
+        //make container for h4 element
         var savedTripContainer = document.createElement("div");
         savedTripContainer.id = "trip-container-" + i;
         savedTripContainer.appendChild(workingListItem);
 
-        //TODO: make edit & delete buttons
+        //edit & delete buttons
         var editBtn = document.createElement("button");
         editBtn.className = "edit-btn";
         editBtn.textContent = "Edit"
@@ -515,6 +515,16 @@ var generateTrip = function(event) {
         generateList();
     });
 
+    var backBtn = document.createElement("button");
+    backBtn.className = "btn btn-secondary";
+    backBtn.textContent = "Back";
+    tripsContainer.appendChild(backBtn);
+
+    backBtn.addEventListener("click", function() {
+        // go back to list
+        generateList();
+    });
+
     // See additional details for forecast card
     $(".details-btn").on("click", detailsButtonHandler)
 }
@@ -575,6 +585,7 @@ var getMap = function(lat, lon) {
         L.marker([lat, lon]).addTo(map);
     }
 };
+
 var mapClick = function(e) {
     // get lat and lon from the mouse click location
     var lat = e.latlng.lat;
@@ -582,6 +593,7 @@ var mapClick = function(e) {
     // generate
     getForecast(lat, lon);
 }
+
 /////////////////// CALL FUNCTIONS //////////////////
 getMap(36.1627, -86.7816); //hardcoded set to nashville
 loadTrips();
