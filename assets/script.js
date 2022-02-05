@@ -10,6 +10,7 @@ var modalOverlay = document.querySelector("#modal-overlay");
 var modalActive = false;
 var savedTrips = [];
 var currentTrip = null;
+var newTripNum = 1;
 var tripsContainer = document.querySelector("#trip-container");
 var listContainer = null;
 var locationInputEl = document.querySelector("#destination-form");
@@ -194,11 +195,15 @@ var generateForecast = function(array) {
             "</br>Wind Speed: " + array[i].windSpeed;
         infoContainer.appendChild(dayDetails);
 
+        var btnContainer = document.createElement("div");
+        btnContainer.className = "row d-flex justify-content-start pl-3";
+        infoContainer.appendChild(btnContainer);
+
         var detailsBtn = document.createElement("button");
         detailsBtn.className = "details-btn";
         detailsBtn.dataset.details = array[i].detailedForecast;
         detailsBtn.textContent = "More Details";
-        infoContainer.appendChild(detailsBtn);
+        btnContainer.appendChild(detailsBtn);
 
         var addBtn = document.createElement("button");
         addBtn.className = "add-btn";
@@ -207,7 +212,7 @@ var generateForecast = function(array) {
         addBtn.dataset.toggle = "modal";
         addBtn.dataset.target = "#exampleModal";
         addBtn.textContent = "Add to Trip";
-        infoContainer.appendChild(addBtn);  
+        btnContainer.appendChild(addBtn);  
     }
     
     // See additional details for forecast card
@@ -328,12 +333,17 @@ var generateList = function() {
     listTitle.textContent = "Saved Trips";
     tripsContainer.appendChild(listTitle);
 
+    var btnContainer = document.createElement("div");
+    btnContainer.className = "row d-flex justify-content-center"
+    tripsContainer.appendChild(btnContainer);
+
     // generate newTrip button
     var newTripBtn = document.createElement("btn");
-    newTripBtn.className = "btn btn-primary";
+    newTripBtn.className = "btn btn-primary trip-btn";
+    newTripBtn.style = "width: fit-content;"
     newTripBtn.id = "new-trip-btn";
     newTripBtn.textContent = "New Trip";
-    tripsContainer.appendChild(newTripBtn);
+    btnContainer.appendChild(newTripBtn);
 
     newTripBtn.addEventListener("click", newTripHandler)
 
@@ -486,18 +496,22 @@ var generateTrip = function(event) {
             "</br>Wind Speed: " + stops[i].windSpeed;
         infoContainer.appendChild(dayDetails);
 
+        var btnContainer = document.createElement("div");
+        btnContainer.className = "row d-flex justify-content-start pl-3";
+        infoContainer.appendChild(btnContainer);
+
         var detailsBtn = document.createElement("button");
         detailsBtn.className = "details-btn";
         detailsBtn.dataset.details = stops[i].detailedForecast;
         detailsBtn.textContent = "More Details";
-        infoContainer.appendChild(detailsBtn);
+        btnContainer.appendChild(detailsBtn);
 
         var deleteBtn = document.createElement("button")
         deleteBtn.className = "delete-btn";
         deleteBtn.id = "t" + stops[i].absoluteDate + '-deleteBtn';
         deleteBtn.dataset.index = i.toString();
         deleteBtn.textContent = "Delete";
-        infoContainer.appendChild(deleteBtn);
+        btnContainer.appendChild(deleteBtn);
 
         // delete forecast container
         deleteBtn.addEventListener("click", function(event) {
@@ -528,11 +542,16 @@ var generateTrip = function(event) {
         });
     }
 
+    // make container for buttons
+    var btnContainer = document.createElement("div");
+    btnContainer.className = "row d-flex justify-content-around";
+    tripsContainer.appendChild(btnContainer);
+
     // add save button to allow user to return to trips list
     var saveBtn = document.createElement("button");
-    saveBtn.className = "btn btn-primary";
+    saveBtn.className = "btn btn-primary trip-btn";
     saveBtn.textContent = "Save"
-    tripsContainer.appendChild(saveBtn);
+    btnContainer.appendChild(saveBtn);
 
     saveBtn.addEventListener("click", function() {
         // Update trip name
@@ -549,14 +568,14 @@ var generateTrip = function(event) {
     });
 
     var resetBtn = document.createElement("button");
-    resetBtn.className = "btn btn-danger";
+    resetBtn.className = "btn btn-danger trip-btn";
     resetBtn.textContent = "Reset Trip";
-    tripsContainer.appendChild(resetBtn);
+    btnContainer.appendChild(resetBtn);
 
     var backBtn = document.createElement("button");
-    backBtn.className = "btn btn-secondary";
+    backBtn.className = "btn btn-secondary trip-btn";
     backBtn.textContent = "Back";
-    tripsContainer.appendChild(backBtn);
+    btnContainer.appendChild(backBtn);
 
 
     backBtn.addEventListener("click", function() {
@@ -565,7 +584,6 @@ var generateTrip = function(event) {
     });
 
     resetBtn.addEventListener("click", function() {
-        
         // remove all day containers from trip
         $(".day-container").remove();
 
