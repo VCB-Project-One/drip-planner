@@ -548,14 +548,29 @@ var generateTrip = function(event) {
         generateList();
     });
 
+    var resetBtn = document.createElement("button");
+    resetBtn.className = "btn btn-danger";
+    resetBtn.textContent = "Reset Trip";
+    tripsContainer.appendChild(resetBtn);
+
     var backBtn = document.createElement("button");
     backBtn.className = "btn btn-secondary";
     backBtn.textContent = "Back";
     tripsContainer.appendChild(backBtn);
 
+
     backBtn.addEventListener("click", function() {
         // go back to list
         generateList();
+    });
+
+    resetBtn.addEventListener("click", function() {
+        
+        // remove all day containers from trip
+        $(".day-container").remove();
+
+        // reset stops array
+        currentTrip.stops = [];
     });
 
     // See additional details for forecast card
