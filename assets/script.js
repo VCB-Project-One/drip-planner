@@ -176,6 +176,7 @@ var generateForecast = function(array) {
             modalOverlay.style.visibility = "hidden";
             MapDivEl.style.visibility = "visible";
             modalActive = false;
+            generateTrip();
         });
 
         // set forecast header to relativeLocation city and state
@@ -293,8 +294,6 @@ var addButtonHandler = function(event) {
         var newStop = forecastArray[forecastIndex];
 
         newTrip.stops.push(newStop);
-
-        console.log("newTrip: " + JSON.stringify(newTrip));
     
         newTrip.stops.sort(function(a, b){return a.relativeDate - b.relativeDate});
 
@@ -352,6 +351,13 @@ var generateList = function() {
         listTitle.id = "trip-title";
         listTitle.textContent = "Saved Trips";
         tripsContainer.appendChild(listTitle);
+    } 
+    else if (savedTrips.length === 0) {     
+        var noTripsMessage = document.createElement("h4");
+        noTripsMessage.className = "no-trips";
+        noTripsMessage.id = "no-trips-message";
+        noTripsMessage.textContent = "You don't have any saved trips! Click the " + '"' + 'New Trip" button to get started!';
+        tripsContainer.appendChild(noTripsMessage);
     }
 
     var btnContainer = document.createElement("div");
@@ -383,7 +389,7 @@ var generateList = function() {
         // listContainer.appendChild(workingListItem);
 
         var workingListTitle = document.createElement("h4");
-        workingListTitle.className = "";
+        workingListTitle.style = "overflow: hidden; text-overflow: ellipsis; padding-bottom: 1em";
         workingListTitle.textContent = savedTrips[i].name;
         workingListItem.appendChild(workingListTitle);
 
@@ -446,6 +452,9 @@ var generateTrip = function(event) {
     // delete everything but trip title
     $("#trip-container").children().remove();
 
+    //reinforce modalActive being set to false; causes map appearance issues if not
+    modalActive = false;
+
     if (currentTrip === null) {
         // get data-id of trip
         var tripsIndex = event.target.parentNode.dataset.id;
@@ -459,13 +468,14 @@ var generateTrip = function(event) {
 
     // create input element
     var inputContainer = document.createElement("div");
-    inputContainer.className = "d-flex flex-column align-items-top"
+    inputContainer.className = "w-100 pt-2 d-flex justify-content-center"
     tripsContainer.appendChild(inputContainer);
 
     var titleEdit = document.createElement("input");
     titleEdit.type = "text";
     titleEdit.className = "text-center";
     titleEdit.id = "title-edit"
+    titleEdit.style = "width: fit-content;"
     titleEdit.value = currentTrip.name;
     inputContainer.appendChild(titleEdit);    
 
@@ -480,7 +490,7 @@ var generateTrip = function(event) {
         if (stops[i].isDayTime === true || !document.querySelector("#d" + stops[i].date)) {
             var dayContainer = document.createElement("div");
             dayContainer.className = "day-container d-flex flex-column";
-            dayContainer.innerHTML = "<h6>" + stops[i].name +"<h6>"
+            dayContainer.innerHTML = "<h6>" + stops[i].name + " (" + stops[i].date + ")" + "</h6>"
             dayContainer.id = "d" + stops[i].date
             $("#trip-container").append(dayContainer);
 
@@ -564,7 +574,7 @@ var generateTrip = function(event) {
 
     // make container for buttons
     var btnContainer = document.createElement("div");
-    btnContainer.className = "row d-flex justify-content-around";
+    btnContainer.className = "row mt-4 mb-4 d-flex justify-content-around";
     tripsContainer.appendChild(btnContainer);
 
     // add save button to allow user to return to trips list
@@ -627,17 +637,9 @@ var loadTrips = function() {
     if (savedTrips.length == 0 || savedTrips === null) {
         savedTrips = [];
 
-        var noTripsMessage = document.createElement("h4");
-        noTripsMessage.className = "no-trips";
-        noTripsMessage.id = "no-trips-message";
-        noTripsMessage.textContent = "You don't have any saved trips! Click the " + '"' + 'New Trip" button to get started!';
-        tripsContainer.appendChild(noTripsMessage);
-
         generateList();
     }
     else {
-        savedTrips = localStorage.getItem("Trips");
-
         //check if any trips; if not, set to empty array
         if (savedTrips === null) {
             savedTrips = [];

@@ -296,3 +296,13 @@ footer {
         padding-top: 15px;
     }
 }
+
+@media screen and (max-width: 375px) {
+    #input-container {
+        max-height: 90vh !important;
+    }
+    
+    #map {
+        height: 250px;
+    }
+}
