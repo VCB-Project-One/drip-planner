@@ -634,7 +634,7 @@ var loadTrips = function() {
     //get savedTrips from local storage
     savedTrips = localStorage.getItem("Trips");
 
-    if (savedTrips.length == 0 || savedTrips === null) {
+    if (savedTrips === null) {
         savedTrips = [];
 
         generateList();
