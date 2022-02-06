@@ -30,9 +30,10 @@ $('#tripModal').modal({ show: false});
 // function to get the city name from input
 var getLocation = function(event) {
     event.preventDefault();
+    
     var city = cityInputEl.value.trim();
     var state = stateInputEl.value.trim();
-    console.log(state);
+
     getCoords(city, state);
 }
 
@@ -48,8 +49,6 @@ var getCoords = function(city, state) {
                     console.log(data);
                     var lat = (data[0].lat);
                     var lon = (data[0].lon);
-                    // console.log(lat);
-                    // console.log(lon);
                     getForecast(lat, lon);
                     getMap(lat, lon);
                 });
@@ -69,7 +68,7 @@ var getForecast = function(lat, lon) {
     fetch(apiUrl)
         .then(function(response) {
             if (response.ok) {
-                console.log("Connection made successfully");
+                console.log("Connection made successfully.");
 
                 response.json().then(function(data) {
                     // log data object
@@ -135,98 +134,119 @@ var getForecast = function(lat, lon) {
 }
 
 var generateForecast = function(array) {
-    // delete existing content
-    var content = document.getElementsByClassName("day-container");
-    while(content.length > 0){
-        content[0].parentNode.removeChild(content[0]);
-    }
-
-    // GENERATE FORECAST MODAL
-    modalOverlay.style.visibility = "visible";
-    modalActive = true;
+    if (currentTrip === null) {
+        // display alert modal
+        let modalText = "Please select a trip first, or make a new one"
+        var detailsText = document.querySelector("#detailed-forecast");
     
-    // make map iframe invisible (???) - was causing issues
-    MapDivEl.style.visibility = "hidden";
-
-    // close button functionality
-    $("#forecast-close-btn").on("click", function() {
-        modalOverlay.style.visibility = "hidden";
-        MapDivEl.style.visibility = "visible";
-        modalActive = false;
-    });
-
-    // set forecast header to relativeLocation city and state
-    document.querySelector("#forecast-header").textContent = "Showing forecast for: " + forecastLocation.city + ", " + forecastLocation.state;
+        //make details modal visible
+        $("#details-overlay").css("visibility", "visible");
+        //make map invisible
+        MapDivEl.style.visibility = "hidden";
     
-    // convert array from JSON object to string
-    JSON.stringify(array);
+        //modal close button
+        $("#details-close-btn").on("click", function(){
+            $("#details-overlay").css("visibility", "hidden");
+            if (modalActive == false) {
+                MapDivEl.style.visibility = "visible";
+            }
+        });
+    
+        //set text to detailed forecast
+        detailsText.textContent = JSON.stringify(modalText);
 
-    for (i=0; i<array.length; i++) {
-        // create container for individual forecast
-        if (array[i].isDaytime == true || dayContainer == null) {
-            var dayContainer = document.createElement("div");
-            dayContainer.className = "day-container";
-            forecastContainer.appendChild(dayContainer);
+    } 
+    else { // generate forecast
+
+        // delete existing content
+        var content = document.getElementsByClassName("day-container");
+        while(content.length > 0){
+            content[0].parentNode.removeChild(content[0]);
         }
 
-        var timeContainer = document.createElement("div");
-        timeContainer.className = "time-container";
-        timeContainer.id = "tempCard-" + i;
-        timeContainer.dataset.id = "timeCard-" + i;
-        timeContainer.dataset.isDayTime = array[i].isDayTime;
-        timeContainer.dataset.relativeDate = array[i].relativeDate;
-        timeContainer.dataset.absoluteDate = array[i].absoluteDate;
-        timeContainer.style = "display: inline-block; background-image: url(" + array[i].icon + ");";
-        dayContainer.appendChild(timeContainer);
+        // GENERATE FORECAST MODAL
+        modalOverlay.style.visibility = "visible";
+        modalActive = true;
+        
+        // make map iframe invisible (???) - was causing issues
+        MapDivEl.style.visibility = "hidden";
 
-        var infoContainer = document.createElement("div");
-        infoContainer.className = "info-container card";
-        timeContainer.appendChild(infoContainer);
+        // close button functionality
+        $("#forecast-close-btn").on("click", function() {
+            modalOverlay.style.visibility = "hidden";
+            MapDivEl.style.visibility = "visible";
+            modalActive = false;
+        });
 
-        var dateEl = document.createElement("h3");
-        dateEl.className = "";
-        dateEl.innerHTML = array[i].name + " (" + array[i].date + ")";
-        infoContainer.appendChild(dateEl);
+        // set forecast header to relativeLocation city and state
+        document.querySelector("#forecast-header").textContent = "Showing forecast for: " + forecastLocation.city + ", " + forecastLocation.state;
+        
+        // convert array from JSON object to string
+        JSON.stringify(array);
 
-        var dayDetails = document.createElement("p");
-        dayDetails.className = "";
-        dayDetails.innerHTML = "Skies: " + array[i].shortForecast + 
-            "</br>Temperature: " + array[i].temperature +
-            "</br>Wind Speed: " + array[i].windSpeed;
-        infoContainer.appendChild(dayDetails);
+        for (i=0; i<array.length; i++) {
+            // create container for individual forecast
+            if (array[i].isDaytime == true || dayContainer == null) {
+                var dayContainer = document.createElement("div");
+                dayContainer.className = "day-container";
+                forecastContainer.appendChild(dayContainer);
+            }
 
-        var btnContainer = document.createElement("div");
-        btnContainer.className = "row d-flex justify-content-start pl-3";
-        infoContainer.appendChild(btnContainer);
+            var timeContainer = document.createElement("div");
+            timeContainer.className = "time-container";
+            timeContainer.id = "tempCard-" + i;
+            timeContainer.dataset.id = "timeCard-" + i;
+            timeContainer.dataset.isDayTime = array[i].isDayTime;
+            timeContainer.dataset.relativeDate = array[i].relativeDate;
+            timeContainer.dataset.absoluteDate = array[i].absoluteDate;
+            timeContainer.style = "display: inline-block; background-image: url(" + array[i].icon + ");";
+            dayContainer.appendChild(timeContainer);
 
-        var detailsBtn = document.createElement("button");
-        detailsBtn.className = "details-btn";
-        detailsBtn.dataset.details = array[i].detailedForecast;
-        detailsBtn.textContent = "More Details";
-        btnContainer.appendChild(detailsBtn);
+            var infoContainer = document.createElement("div");
+            infoContainer.className = "info-container card";
+            timeContainer.appendChild(infoContainer);
 
-        var addBtn = document.createElement("button");
-        addBtn.className = "add-btn";
-        addBtn.dataset.forecastIndex = i;
-        addBtn.dataset.details = array[i].detailedForecast;
-        addBtn.dataset.toggle = "modal";
-        addBtn.dataset.target = "#exampleModal";
-        addBtn.textContent = "Add to Trip";
-        btnContainer.appendChild(addBtn);  
+            var dateEl = document.createElement("h3");
+            dateEl.className = "";
+            dateEl.innerHTML = array[i].name + " (" + array[i].date + ")";
+            infoContainer.appendChild(dateEl);
+
+            var dayDetails = document.createElement("p");
+            dayDetails.className = "";
+            dayDetails.innerHTML = "Skies: " + array[i].shortForecast + 
+                "</br>Temperature: " + array[i].temperature +
+                "</br>Wind Speed: " + array[i].windSpeed;
+            infoContainer.appendChild(dayDetails);
+
+            var btnContainer = document.createElement("div");
+            btnContainer.className = "row d-flex justify-content-start pl-3";
+            infoContainer.appendChild(btnContainer);
+
+            var detailsBtn = document.createElement("button");
+            detailsBtn.className = "details-btn";
+            detailsBtn.dataset.details = array[i].detailedForecast;
+            detailsBtn.textContent = "More Details";
+            btnContainer.appendChild(detailsBtn);
+
+            var addBtn = document.createElement("button");
+            addBtn.className = "add-btn";
+            addBtn.dataset.forecastIndex = i;
+            addBtn.dataset.details = array[i].detailedForecast;
+            addBtn.dataset.toggle = "modal";
+            addBtn.dataset.target = "#exampleModal";
+            addBtn.textContent = "Add to Trip";
+            btnContainer.appendChild(addBtn);  
+        }
+        
+        // See additional details for forecast card
+        $(".details-btn").on("click", detailsButtonHandler)
+
+        // ADD FORECAST CARD TO TRIP
+        $(".add-btn").on("click", addButtonHandler)
     }
-    
-    // See additional details for forecast card
-    $(".details-btn").on("click", detailsButtonHandler)
-
-    // ADD FORECAST CARD TO TRIP
-    $(".add-btn").on("click", addButtonHandler)
-    
 }
 
 var detailsButtonHandler = function(event) {
-    console.log("details button clicked");
-    console.log(event.target.dataset.details)
-
     let modalText = event.target.dataset.details;
     var detailsText = document.querySelector("#detailed-forecast");
 
@@ -260,7 +280,7 @@ var addButtonHandler = function(event) {
     if (savedTrips.length === 0) {
     
         // set trip name
-        var tripName = "Trip " + (savedTrips.length + 1);
+        var tripName = "New Trip " + (savedTrips.length + 1);
 
         // Make new trip object
         var newTrip = {
@@ -295,7 +315,6 @@ var addButtonHandler = function(event) {
         }
         else if (currentTrip) {
             var newStop = forecastArray[forecastIndex];
-            console.log(newStop);
 
             currentTrip.stops.push(newStop); 
 
@@ -327,11 +346,13 @@ var generateList = function() {
     }
 
     //generate title
-    var listTitle = document.createElement("h3");
-    listTitle.className = "text-center";
-    listTitle.id = "trip-title";
-    listTitle.textContent = "Saved Trips";
-    tripsContainer.appendChild(listTitle);
+    if (savedTrips.length > 0) {
+        var listTitle = document.createElement("h3");
+        listTitle.className = "text-center";
+        listTitle.id = "trip-title";
+        listTitle.textContent = "Saved Trips";
+        tripsContainer.appendChild(listTitle);
+    }
 
     var btnContainer = document.createElement("div");
     btnContainer.className = "row d-flex justify-content-center"
@@ -391,11 +412,12 @@ var generateList = function() {
 }
 
 var newTripHandler = function(event) {
-    console.log("New trip button has been pressed");
+    //increase newTripNum
+    newTripNum ++;
 
     // make empty trip object
     var newTrip = {
-        name: "Trip " + (savedTrips.length + 1),
+        name: "New Trip " + (newTripNum),
         stops: [],
         index: savedTrips.length
     }
@@ -409,8 +431,6 @@ var newTripHandler = function(event) {
 }
 
 var deleteListItem = function(event) {
-    console.log("Delete trip button clicked")
-
     //remove html element
     var elementIndex = event.target.getAttribute("data-index");
     
@@ -605,15 +625,15 @@ var loadTrips = function() {
     savedTrips = localStorage.getItem("Trips");
 
     if (savedTrips === [] || savedTrips === null) {
-        console.log("You don't have any saved trips!")
-
         savedTrips = [];
 
         var noTripsMessage = document.createElement("h4");
         noTripsMessage.className = "no-trips";
         noTripsMessage.id = "no-trips-message";
-        noTripsMessage.textContent = "You don't have any saved trips! Input a city to get started.";
+        noTripsMessage.textContent = "You don't have any saved trips! Click the " + '"' + 'New Trip" button to get started!';
         tripsContainer.appendChild(noTripsMessage);
+
+        generateList();
     }
     else {
         savedTrips = localStorage.getItem("Trips");
@@ -628,6 +648,9 @@ var loadTrips = function() {
         // Generate HTML inside trip container
         generateList();
     }
+
+    // update newTripNum
+    newTripNum = savedTrips.length;
 }
 
 var getMap = function(lat, lon) {

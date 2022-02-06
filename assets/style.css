@@ -246,6 +246,20 @@ footer {
         flex-direction: column;
         justify-content: center;
         height: fit-content;
+        padding: auto;
+        width: 100%;
+    }
+
+    #input-container {
+        width: 95%;
+        margin-left: 0 auto !important;
+        margin-right: 0 auto !important;
+    }
+
+    #trip-container {
+        width: 95%;
+        margin-left: 0 auto !important;
+        margin-right: 0 auto !important;
     }
 
     .left.right {
