@@ -46,6 +46,10 @@ main {
     background-color: rgb(238, 241, 247);
 }
 
+#input-container {
+    max-height: 76vh !important;
+}
+
 .input-form {
     height: 30%;
     background-color: rgb(238, 241, 247);

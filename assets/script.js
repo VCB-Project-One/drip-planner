@@ -624,7 +624,7 @@ var loadTrips = function() {
     //get savedTrips from local storage
     savedTrips = localStorage.getItem("Trips");
 
-    if (savedTrips === [] || savedTrips === null) {
+    if (savedTrips.length == 0 || savedTrips === null) {
         savedTrips = [];
 
         var noTripsMessage = document.createElement("h4");
