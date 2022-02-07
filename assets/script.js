@@ -566,8 +566,8 @@ var generateTrip = function(event) {
 
         // delete forecast container
         deleteBtn.addEventListener("click", function(event) {
-            var forecastCard = document.getElementById(event.target.parentNode.parentNode.id);
-            var cardRowContainer = document.getElementById(event.target.parentNode.parentNode.parentNode.id);
+            var forecastCard = document.getElementById(event.target.parentNode.parentNode.parentNode.id);
+            var cardRowContainer = document.getElementById(event.target.parentNode.parentNode.parentNode.parentNode.id);
 
             // remove card
             cardRowContainer.removeChild(forecastCard);
