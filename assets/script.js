@@ -485,7 +485,7 @@ var generateTrip = function(event) {
         $(window).resize(function() {
             if (window.matchMedia("(max-width: 767px)").matches) {
                 console.log("mobile keyboard has popped up.");
-                $("#trip-container").addClass("mt-5");
+                $("#input-container").css("padding-bottom", "200px");
             }
         })
     })
@@ -495,7 +495,7 @@ var generateTrip = function(event) {
         console.log("blur")
         $(window).resize(function() {
             if (window.matchMedia("(max-width: 767px)").matches) {
-                $("#trip-container").removeClass("mt-5");
+                $("#input-container").css("padding-bottom", "16px");
             }
         })
     })
