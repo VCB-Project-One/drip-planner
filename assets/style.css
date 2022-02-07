@@ -47,7 +47,8 @@ main {
 }
 
 #input-container {
-    max-height: 76vh !important;
+    max-height: 76vh !important;;
+    min-height: 76vh !important;
 }
 
 .input-form {
@@ -301,7 +302,7 @@ footer {
     #input-container {
         max-height: 90vh !important;
     }
-    
+
     #map {
         height: 250px;
     }

@@ -479,6 +479,27 @@ var generateTrip = function(event) {
     titleEdit.value = currentTrip.name;
     inputContainer.appendChild(titleEdit);    
 
+    // increase margin-bottom of input container to accomodate for mobile keyboard pop-up
+    $("#title-edit").focus(function() {
+        console.log("focus")
+        $(window).resize(function() {
+            if (window.matchMedia("(max-width: 767px)").matches) {
+                console.log("mobile keyboard has popped up.");
+                $("#trip-container").addClass("mt-5");
+            }
+        })
+    })
+
+    // reset margin-top of trip container on blur
+    $("#title-edit").blur(function() {
+        console.log("blur")
+        $(window).resize(function() {
+            if (window.matchMedia("(max-width: 767px)").matches) {
+                $("#trip-container").removeClass("mt-5");
+            }
+        })
+    })
+
     // get rid of lists
     if ($("#list-container")) {
         $("#list-container").remove();
