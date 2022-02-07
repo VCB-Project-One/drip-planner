@@ -495,7 +495,7 @@ var generateTrip = function(event) {
         $(window).resize(function() {
             if (window.matchMedia("(max-width: 767px)").matches) {
                 $("#map").css("visibility", "visible");
-                $("map-container").css("visibility", "visible");
+                $("#map-container").css("visibility", "visible");
             }
         })
     })
