@@ -15,7 +15,7 @@ This website provides the forecast for any place in the world that you intend on
 * CSS
 * JavaScript
 ## Website
-https://wingram1.github.io/drip-planner/
+https://vcb-projects.github.io/drip-planner/
 
 ## Screenshot
 ![Webpage](./assets/images/README.jpg)
